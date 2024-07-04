@@ -23,6 +23,10 @@ export default function Search() {
   const [tempFromLon, setTempFromLon] = useState(null);
   const [tempToLat, setTempToLat] = useState(null);
   const [tempToLon, setTempToLon] = useState(null);
+  const [mostRecentFocus, setMostRecentFocus] = useState(null);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
+  const [toPlaceSelected, setToPlaceSelected] = useState(false);
+  const [fromPlaceSelected, setFromPlaceSelected] = useState(true);
 
   const {
     currentPosition,
@@ -129,7 +133,7 @@ export default function Search() {
   };
 
   const filterSections = () => {
-    if ((isFromFocused && fromLocation !== '') || (isToFocused && toLocation !== '')) {
+    if ((mostRecentFocus === 'from' && fromLocation !== '') || (mostRecentFocus === 'to' && toLocation !== '')) {
       return [
         {
           id: '2',
@@ -163,7 +167,8 @@ export default function Search() {
 
   useEffect(() => {
     setData(filterSections());
-  }, [fromLocation, toLocation, isFromFocused, isToFocused, recents, currentLocation, dataJson]);
+    updateLocationSelectionStatus(); // Update location selection status whenever the data changes
+  }, [fromLocation, toLocation, mostRecentFocus, recents, currentLocation, dataJson]);
 
   useEffect(() => {
     (async () => {
@@ -198,10 +203,24 @@ export default function Search() {
   }, [fromLocation]);
 
   useEffect(() => {
+    // clearRecents()
     if (toLocation) {
       debouncedGetLocationData(toLocation);
     }
   }, [toLocation]);
+
+  const handleFocus = (input) => {
+    setMostRecentFocus(input);
+    updateLocationSelectionStatus();
+  };
+
+  const updateLocationSelectionStatus = () => {
+    if (!isFromFocused && !isToFocused && toPlaceSelected && fromPlaceSelected) {
+      setIsLocationSelected(true);
+    } else {
+      setIsLocationSelected(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -209,6 +228,9 @@ export default function Search() {
         <LocationSearchContainer
           backgroundColor={'#F10000'}
           addRecent={handleGoPress}
+          onFromFocus={() => handleFocus('from')}
+          onToFocus={() => handleFocus('to')}
+          arePlacesSelected={(toPlaceSelected && fromPlaceSelected)}
         />
       </View>
       <View style={styles.body}>
@@ -217,9 +239,9 @@ export default function Search() {
           keyExtractor={(item, index) => `item-${index}`}
           renderItem={({ item, section }) => (
             <TouchableOpacity onPress={() => {
-              const setLocation = isFromFocused ? setFromLocation : setToLocation;
+              const setLocation = mostRecentFocus === 'from' ? setFromLocation : setToLocation;
               setLocation(item.display_place);
-              if (isFromFocused) {
+              if (mostRecentFocus === 'from') {
                 setFromRecentsData({
                   display_place: item.display_place,
                   display_name: item.display_name,
@@ -238,8 +260,10 @@ export default function Search() {
                 setTempToLat(item.lat);
                 setTempToLon(item.lon);
               }
-              const toggleFunction = isFromFocused ? toggleFromIcon : toggleToIcon;
+              const toggleFunction = mostRecentFocus === 'from' ? toggleFromIcon : toggleToIcon;
               toggleFunction(section);
+              mostRecentFocus === 'from' ? setFromPlaceSelected(true) : setToPlaceSelected(true)
+              updateLocationSelectionStatus(); // Update location selection status after selecting a location
             }} style={styles.touchableItem}>
               <View style={styles.placeContainer}>
                 <Image source={section.image} style={styles.image} />

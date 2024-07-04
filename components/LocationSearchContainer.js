@@ -1,5 +1,5 @@
 import { StyleSheet, View, Dimensions, Alert } from 'react-native';
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SvgXml } from 'react-native-svg';
@@ -12,10 +12,10 @@ import currentLocationIcon from '../assets/images/current-location.png';
 import locationIcon from '../assets/images/location-icon.png';
 import svgWhiteBackButton from '../assets/svgs/svgWhiteBackButton';
 
-const screenWidth = Dimensions.get('window').width
-const screenHeight = Dimensions.get('window').height
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
-export default function LocationSearchContainer({ backgroundColor, addRecent }) {
+export default function LocationSearchContainer({ backgroundColor, addRecent, onFromFocus, onToFocus, arePlacesSelected }) {
   const {
     fromLocation,
     setFromLocation,
@@ -36,6 +36,7 @@ export default function LocationSearchContainer({ backgroundColor, addRecent }) 
   const handleFocusFrom = () => {
     setIsFromFocused(true);
     setIsToFocused(false);
+    onFromFocus();
   };
 
   const handleBlurFrom = () => {
@@ -45,6 +46,7 @@ export default function LocationSearchContainer({ backgroundColor, addRecent }) 
   const handleFocusTo = () => {
     setIsToFocused(true);
     setIsFromFocused(false);
+    onToFocus();
   };
 
   const handleBlurTo = () => {
@@ -52,22 +54,22 @@ export default function LocationSearchContainer({ backgroundColor, addRecent }) 
   };
 
   const handleSetFromCurrentLocation = () => {
-    setIsFromCurrentLocation(false)
-  }
+    setIsFromCurrentLocation(false);
+  };
 
   const handleSetToCurrentLocation = () => {
-    setIsToCurrentLocation(false)
-  }
+    setIsToCurrentLocation(false);
+  };
 
   const fromLocationInputHandler = (event) => {
-    setFromLocation(event)
-    setIsFromCurrentLocation(false)
-  }
+    setFromLocation(event);
+    setIsFromCurrentLocation(false);
+  };
 
   const toLocationInputHandler = (event) => {
-    setToLocation(event)
-    setIsToCurrentLocation(false)
-  }
+    setToLocation(event);
+    setIsToCurrentLocation(false);
+  };
 
   const handleLocationSwap = () => {
     const newFromLocation = toLocation;
@@ -75,31 +77,29 @@ export default function LocationSearchContainer({ backgroundColor, addRecent }) 
 
     setFromLocation(newFromLocation);
     setToLocation(newToLocation);
-    if(isFromCurrentLocation == true){
-      setIsFromCurrentLocation(false)
-      setIsToCurrentLocation(true)
-    }
-    else if (isToCurrentLocation == true) {
-      setIsFromCurrentLocation(true)
-      setIsToCurrentLocation(false)
+    if (isFromCurrentLocation) {
+      setIsFromCurrentLocation(false);
+      setIsToCurrentLocation(true);
+    } else if (isToCurrentLocation) {
+      setIsFromCurrentLocation(true);
+      setIsToCurrentLocation(false);
     }
     setIsFromFocused(!isFromFocused);
     setIsToFocused(!isToFocused);
-  }
+  };
 
   const handleSearch = () => {
-    if (fromLocation && toLocation !== '') {
-      addRecent(toLocation)
-      navigation.navigate('Map', {})
-    }
-    else {
+    if (fromLocation && toLocation !== '' && arePlacesSelected) {
+      addRecent(toLocation);
+      navigation.navigate('Map', {});
+    } else {
       Alert.alert(
         'Please select a location',
         'You need to select a location to perform the search.',
         [{ text: 'OK', onPress: () => console.log('OK pressed') }]
       );
     }
-  }
+  };
 
   const dynamicStyles = StyleSheet.create({
     container: {
@@ -107,14 +107,14 @@ export default function LocationSearchContainer({ backgroundColor, addRecent }) 
       paddingTop: backgroundColor ? screenHeight * 12 / 100 : 0,
       alignItems: 'center',
       borderRadius: 20,
-      transform: backgroundColor ? [{ translateY: - screenHeight * 7 / 100 }] : [{translateY: 0}],
+      transform: backgroundColor ? [{ translateY: -screenHeight * 7 / 100 }] : [{ translateY: 0 }],
       backgroundColor: backgroundColor || 'transparent',
       paddingBottom: backgroundColor ? 20 : 0,
       shadowColor: backgroundColor ? '#EC0000' : 'transparent',
       shadowOffset: backgroundColor ? { width: -10, height: -15 } : 0,
       shadowOpacity: backgroundColor ? 0.9 : 0,
       shadowRadius: backgroundColor ? 30 : 0,
-      zIndex: 22
+      zIndex: 22,
     },
     innerShadow: {
       position: 'absolute',
@@ -171,13 +171,13 @@ export default function LocationSearchContainer({ backgroundColor, addRecent }) 
         onBlur={handleBlurTo}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
-    top: screenHeight * 8/100,
-    left: screenWidth * 5/100,
-  }
-})
+    top: screenHeight * 8 / 100,
+    left: screenWidth * 5 / 100,
+  },
+});

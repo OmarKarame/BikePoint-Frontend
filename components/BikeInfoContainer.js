@@ -40,6 +40,7 @@ export default function BikeInfoContainer({ location, startStation, endStation }
           onOverlayPress={preventClosing}
           onBackButtonPress={preventClosing}
           adjustToContentHeight={false}
+          avoidKeyboardLikeIOS={true}
           modalStyle={{
             backgroundColor: 'transparent',
             shadowColor: 'transparent'

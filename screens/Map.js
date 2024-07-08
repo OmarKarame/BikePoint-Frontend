@@ -71,20 +71,27 @@ export default function Map() {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
-        return;
-      }
-      Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          distanceInterval: 2,
-        },
-        (newLocation) => {
-          setLocation(newLocation.coords);
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.error('Permission to access location was denied');
+          return;
         }
-      );
+        Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            distanceInterval: 2,
+          },
+          (newLocation) => {
+            // newLocation might be null, so doing 'optional chaining'
+            if (newLocation?.coords) {
+              setLocation(newLocation.coords);
+            }
+          }
+        );
+      } catch (error) {
+        console.error('Error in getting location foreground permission or location coordinates', error);
+      }
     })();
   }, []);
 

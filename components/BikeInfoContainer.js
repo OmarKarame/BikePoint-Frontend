@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -8,11 +8,13 @@ import svgWhiteClock from '../assets/svgs/svgWhiteClock';
 import svgRedTimer from '../assets/svgs/svgRedTimer';
 import svgRedDockedBicycle from '../assets/svgs/svgRedDockedBicycle';
 import svgWhiteBicycle from '../assets/svgs/svgWhiteBicycle';
+import LocationContext from '../components/LocationContext';
 
 const screenHeight = Dimensions.get('window').height
 const screenWidth = Dimensions.get('window').width
 
 export default function BikeInfoContainer({ location, startStation, endStation }) {
+  const { arrivalTime } = useContext(LocationContext);
   const modalizeRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,6 +25,7 @@ export default function BikeInfoContainer({ location, startStation, endStation }
     : styles.handleClosed;
 
   useEffect(() => {
+    console.log(arrivalTime);
     modalizeRef.current?.open();
   }, []);
 

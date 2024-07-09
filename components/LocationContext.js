@@ -17,6 +17,7 @@ export const LocationProvider = ({ children }) => {
   const [fromLon, setFromLon] = useState(null);
   const [toLat, setToLat] = useState(null);
   const [toLon, setToLon] = useState(null);
+  const [arrivalTime, setArrivalTime] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -77,6 +78,8 @@ export const LocationProvider = ({ children }) => {
         setToLat,
         toLon,
         setToLon,
+        arrivalTime,
+        setArrivalTime
       }}
     >
       {children}

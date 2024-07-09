@@ -47,82 +47,79 @@
 // })
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
 import polyline from '@mapbox/polyline';
-import { REACT_APP_LOCATIONIQ_API_KEY } from '@env';
+import { REACT_APP_MAPBOX_API_KEY } from '@env';
+import LocationContext from '../components/LocationContext';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 export default function MapDisplay({ location }) {
-  const [routeCoordinates, setRouteCoordinates] = useState({
-    route1: [],
-    route2: [],
-    route3: []
-  });
+  const { setArrivalTime } = useContext(LocationContext);
+  const [walkingRoute1, setWalkingRoute1] = useState([]);
+  const [cyclingRoute, setCyclingRoute] = useState([]);
+  const [walkingRoute2, setWalkingRoute2] = useState([]);
 
-  const start = { latitude: 51.511261, longitude: -0.180570 };
-  const stop1 = { latitude: 51.513807, longitude: -0.123126 };
-  const stop2 = { latitude: 51.511792, longitude: -0.127113 };
-  const destination = { latitude: 51.507996, longitude: -0.12360937 };
-  const modes = ["driving", "driving", "driving"];
+  const coordinates = [
+    { longitude: -0.179909, latitude: 51.512329 },
+    { longitude: -0.179668, latitude: 51.511654 },
+    { longitude: -0.080189, latitude: 51.531202 },
+    { longitude: -0.076262, latitude: 51.533402 }
+  ];
 
-  const fetchDirections = async (start, end, mode) => {
-    const url = `https://us1.locationiq.com/v1/directions/${mode}/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?key=${REACT_APP_LOCATIONIQ_API_KEY}&steps=true&alternatives=true&geometries=polyline&overview=full`;
+  const fetchDirections = async (mode, start, end) => {
+    const coordinateString = `${start.longitude},${start.latitude};${end.longitude},${end.latitude}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${coordinateString}?alternatives=true&annotations=duration&continue_straight=true&exclude=ferry&geometries=polyline&language=en&overview=full&steps=true&access_token=${REACT_APP_MAPBOX_API_KEY}`;
+
     try {
       const response = await fetch(url);
-      const text = await response.text();
-      const data = JSON.parse(text);
-      return data.routes[0].geometry;
+      const data = await response.json();
+      return {
+        geometry: data.routes[0].geometry,
+        duration: data.routes[0].duration
+      };
     } catch (error) {
       console.error('Error fetching directions:', error);
       return null;
     }
   };
 
-  const getFullRoute = async () => {
+  const getRoute = async (mode, start, end) => {
     try {
-      const route1 = await fetchDirections(start, stop1, modes[0]);
-      const route2 = await fetchDirections(stop1, stop2, modes[1]);
-      const route3 = await fetchDirections(stop2, destination, modes[2]);
-
-      if (!route1 || !route2 || !route3) {
-        console.error('Failed to fetch one or more routes');
-        return {
-          route1: [],
-          route2: [],
-          route3: []
-        };
+      const route = await fetchDirections(mode, start, end);
+      if (!route) {
+        console.error('Failed to fetch route');
+        return { path: [], duration: 0 };
       }
 
-      const decodedRoute1 = polyline.decode(route1).map(point => ({ latitude: point[0], longitude: point[1] }));
-      const decodedRoute2 = polyline.decode(route2).map(point => ({ latitude: point[0], longitude: point[1] }));
-      const decodedRoute3 = polyline.decode(route3).map(point => ({ latitude: point[0], longitude: point[1] }));
-
-      return {
-        route1: decodedRoute1,
-        route2: decodedRoute2,
-        route3: decodedRoute3
-      };
+      const path = polyline.decode(route.geometry).map(point => ({ latitude: point[1], longitude: point[0] }));
+      return { path, duration: route.duration };
     } catch (error) {
       console.error('Error fetching directions:', error);
-      return {
-        route1: [],
-        route2: [],
-        route3: []
-      };
+      return { path: [], duration: 0 };
     }
   };
 
   useEffect(() => {
-    const loadRoute = async () => {
-      const fullRoute = await getFullRoute();
-      setRouteCoordinates(fullRoute);
-    };
+    const loadRoutes = async () => {
+      const walking1 = await getRoute('walking', coordinates[0], coordinates[1]);
+      const cycling = await getRoute('cycling', coordinates[1], coordinates[2]);
+      const walking2 = await getRoute('walking', coordinates[2], coordinates[3]);
 
-    loadRoute();
+      setWalkingRoute1(walking1.path);
+      setCyclingRoute(cycling.path);
+      setWalkingRoute2(walking2.path);
+
+      const totalDuration = walking1.duration + cycling.duration + walking2.duration;
+      const arrivalTime = new Date();
+      arrivalTime.setSeconds(arrivalTime.getSeconds() + totalDuration);
+      setArrivalTime(arrivalTime);
+      console.log(arrivalTime);
+    };
+    loadRoutes();
   }, []);
 
   return (
@@ -132,38 +129,32 @@ export default function MapDisplay({ location }) {
         region={{
           latitude: location?.latitude || 51.514156,
           longitude: location?.longitude || -0.12070277,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
         showsUserLocation={true}
       >
-        {location && (
-          <Marker
-            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-            title="My Location"
-          />
-        )}
-        {routeCoordinates.route1.length > 0 && (
+        {walkingRoute1.length > 0 && (
           <Polyline
-            coordinates={routeCoordinates.route1}
-            strokeWidth={3}
+            coordinates={walkingRoute1}
+            strokeWidth={2}
             strokeColor="red"
-            lineDashPattern={[2, 6]} // Dotted line pattern
+            lineDashPattern={[6]}
           />
         )}
-        {routeCoordinates.route2.length > 0 && (
+        {cyclingRoute.length > 0 && (
           <Polyline
-            coordinates={routeCoordinates.route2}
-            strokeWidth={4}
-            strokeColor="blue"
-          />
-        )}
-        {routeCoordinates.route3.length > 0 && (
-          <Polyline
-            coordinates={routeCoordinates.route3}
-            strokeWidth={3}
+            coordinates={cyclingRoute}
+            strokeWidth={5}
             strokeColor="red"
-            lineDashPattern={[2, 6]} // Dotted line pattern
+          />
+        )}
+        {walkingRoute2.length > 0 && (
+          <Polyline
+            coordinates={walkingRoute2}
+            strokeWidth={2}
+            strokeColor="red"
+            lineDashPattern={[6]}
           />
         )}
       </MapView>

@@ -21,6 +21,7 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
     setFromLocation,
     toLocation,
     setToLocation,
+    currentLocation,
     isFromCurrentLocation,
     setIsFromCurrentLocation,
     isToCurrentLocation,
@@ -29,6 +30,14 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
     setIsFromFocused,
     isToFocused,
     setIsToFocused,
+    fromLat,
+    fromLon,
+    toLat,
+    toLon,
+    setFromLat,
+    setFromLon,
+    setToLat,
+    setToLon
   } = useContext(LocationContext);
 
   const navigation = useNavigation();
@@ -54,10 +63,12 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
   };
 
   const handleSetFromCurrentLocation = () => {
+    // setFromLocation("")
     setIsFromCurrentLocation(false);
   };
 
   const handleSetToCurrentLocation = () => {
+    // setToLocation(currentLocation)
     setIsToCurrentLocation(false);
   };
 
@@ -74,9 +85,18 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
   const handleLocationSwap = () => {
     const newFromLocation = toLocation;
     const newToLocation = fromLocation;
+    const newFromLat = toLat;
+    const newFromLon = toLon;
+    const newToLat = fromLat;
+    const newToLon = fromLon;
 
     setFromLocation(newFromLocation);
     setToLocation(newToLocation);
+    setFromLat(newFromLat);
+    setFromLon(newFromLon);
+    setToLat(newToLat);
+    setToLon(newToLon);
+
     if (isFromCurrentLocation) {
       setIsFromCurrentLocation(false);
       setIsToCurrentLocation(true);

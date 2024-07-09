@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TextInput, Dimensions, Image, TouchableOpacity, Keyboard } from 'react-native'
-import React, { useRef } from 'react'
+import React, { useRef, useContext } from 'react'
 import ButtonComponent from './ButtonComponent';
+import LocationContext from '../components/LocationContext';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,16 +20,41 @@ export default function LocationInput({
   image,
   onFocus,
   onBlur,
-  currentLocation
 }) {
+  const {
+    fromLocation,
+    toLocation,
+    setFromLocation,
+    setToLocation,
+    setCurrentLocation,
+    setIsFromFocused,
+    setIsToFocused,
+    isFromFocused,
+    isToFocused,
+    currentLocation
+  } = useContext(LocationContext);
+
+  const toggleCurrentLocation = () => {
+    setIsCurrentLocation(false)
+    if (isToFocused){
+      setIsFromFocused(true)
+      setIsToFocused(false)
+      setFromLocation('')
+    } else {
+      setIsFromFocused(false)
+      setIsToFocused(true)
+      setToLocation('')
+    }
+
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{text}</Text>
       <Image source={image} style={styles.image}/>
       {isCurrentLocation ?
-        <TouchableOpacity style={styles.currentLocationDisplay} onPress={setIsCurrentLocation}>
+        <TouchableOpacity style={styles.currentLocationDisplay} onPress={toggleCurrentLocation}>
           <Text style={styles.primaryText}>Current Location</Text>
-          <Text style={styles.secondaryText}>{value}</Text>
+          <Text style={styles.secondaryText}>{currentLocation}</Text>
         </TouchableOpacity>
         :
         <TextInput

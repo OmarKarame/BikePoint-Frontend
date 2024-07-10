@@ -210,34 +210,39 @@ export default function MapDisplay({ location }) {
   useEffect(() => {
     // console.log("Start Station:", startStation.commonName);
     // console.log("End Station:", endStation.commonName);
-    // if ( startStation != undefined &&
-    //      endStation != undefined && toLon != null && toLat != null && fromLat != null && fromLon != null
-    //     ) {
-    //   console.log('test 1');
-    //   console.log(walkingRoute1);
+    if (startStation != undefined && endStation != undefined) {
+      console.log("test 1");
+      console.log(walkingRoute1);
       loadRoute();
-    // } else {
-    //   // Set fromLocation and toLocation and their coordinates to empty strings and null respectively
-    //   console.log('test 2');
-    //   // Create popup that says "Please search for a location" and an OK button that takes me to navigation.navigate('Search', {})
-    //   Alert.alert(
-    //     "Location Required",
-    //     "Please search for a location",
-    //     [
-    //       {
-    //         text: "OK",
-    //         onPress: () => navigation.navigate('Search', {})
-    //       }
-    //     ]
-    //   );
-    // }
+    } else {
+      // Set fromLocation and toLocation and their coordinates to empty strings and null respectively
+      console.log("test 2");
+      // Create popup that says "Please search for a location" and an OK button that takes me to navigation.navigate('Search', {})
+      Alert.alert("Location Required", "Please search for a location", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Search", {}),
+        },
+      ]);
+    }
+
+    // Zoom to the user's location when the screen is opened
+    if (location) {
+      setMapRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    }
   }, [
     fromLat,
     fromLon,
     toLat,
     toLon,
-    startStation.commonName,
-    endStation.commonName,
+    startStation?.commonName,
+    endStation?.commonName,
+    location,
   ]);
 
   return (

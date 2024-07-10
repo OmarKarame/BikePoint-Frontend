@@ -14,12 +14,16 @@ export default function Map() {
   const { fromLocation, toLocation, numBikes, currentPosition, fromLat,
     fromLon,
     toLat,
-    toLon, } = useContext(LocationContext);
+    toLon,
+    startStation,
+    setStartStation,
+    endStation,
+    setEndStation
+   } = useContext(LocationContext);
 
   const [start, setStart] = useState(fromLocation);
   const [location, setLocation] = useState(null);
-  const [startStation, setStartStation] = useState([]);
-  const [endStation, setEndStation] = useState([]);
+
   const [error, setError] = useState('');
 
   async function getClosestStartStation(lat, lon) {
@@ -93,21 +97,25 @@ export default function Map() {
 
   useEffect(() => {
     if (location) {
-      fetchStartStation(location.latitude, location.longitude);
-      fetchEndStation(51.523350, -0.077440);
+      // fetchStartStation(location.latitude, location.longitude);
+      fetchStartStation(fromLat, fromLon)
+      fetchEndStation(toLat, toLon)
+      // fetchEndStation(51.523350, -0.077440);
     }
   }, [location]); // Initial fetch once location is obtained
 
   useEffect(() => {
     if (toLocation && location) {
-      fetchEndStation(51.523350, -0.077440);
+      // fetchEndStation(51.523350, -0.077440);
+      fetchEndStation(toLat, toLon)
       console.log('toLocation changed');
     }
   }, [toLocation]); // Fetch when toLocation changes
 
   useEffect(() => {
     if (fromLocation && location) {
-      fetchStartStation(location.latitude, location.longitude);
+      // fetchStartStation(location.latitude, location.longitude);
+      fetchStartStation(fromLat, fromLon)
       console.log('fromLocation changed');
     }
   }, [fromLocation]); // Fetch when fromLocation changes
@@ -126,7 +134,9 @@ export default function Map() {
     // console.log(fromLon);
     // console.log(toLat);
     // console.log(toLon);
-  }, [toLon])
+    // console.log(startStation);
+    // console.log(endStation);
+  }, [startStation])
 
   const navigation = useNavigation();
 

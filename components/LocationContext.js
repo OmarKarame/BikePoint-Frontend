@@ -18,6 +18,13 @@ export const LocationProvider = ({ children }) => {
   const [toLat, setToLat] = useState(null);
   const [toLon, setToLon] = useState(null);
   const [arrivalTime, setArrivalTime] = useState(null);
+  const [searchFlag, setSearchFlag] = useState(false);
+  const [secondSearchFlag, setSecondSearchFlag] = useState(false);
+  const [startStation, setStartStation] = useState([]);
+  const [endStation, setEndStation] = useState([]);
+  const [walkingRoute1, setWalkingRoute1] = useState([]);
+  const [cyclingRoute, setCyclingRoute] = useState([]);
+  const [walkingRoute2, setWalkingRoute2] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -79,7 +86,21 @@ export const LocationProvider = ({ children }) => {
         toLon,
         setToLon,
         arrivalTime,
-        setArrivalTime
+        setArrivalTime,
+        searchFlag,
+        setSearchFlag,
+        secondSearchFlag,
+        setSecondSearchFlag,
+        startStation,
+        setStartStation,
+        endStation,
+        setEndStation,
+        walkingRoute1,
+        setWalkingRoute1,
+        walkingRoute2,
+        setWalkingRoute2,
+        cyclingRoute,
+        setCyclingRoute,
       }}
     >
       {children}

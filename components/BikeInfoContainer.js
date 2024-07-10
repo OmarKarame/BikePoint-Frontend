@@ -13,8 +13,8 @@ import LocationContext from '../components/LocationContext';
 const screenHeight = Dimensions.get('window').height
 const screenWidth = Dimensions.get('window').width
 
-export default function BikeInfoContainer({ location, startStation, endStation }) {
-  const { arrivalTime } = useContext(LocationContext);
+export default function BikeInfoContainer({ location }) {
+  const { arrivalTime, startStation, endStation  } = useContext(LocationContext);
   const modalizeRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,7 +25,7 @@ export default function BikeInfoContainer({ location, startStation, endStation }
     : styles.handleClosed;
 
   useEffect(() => {
-    console.log(arrivalTime);
+    // console.log(arrivalTime);
     modalizeRef.current?.open();
   }, []);
 

@@ -21,7 +21,7 @@ export default function Map() {
 
   async function getClosestStartStation(lat, lon) {
     try {
-      const response = await fetch(`http://192.168.10.177:3000/getStartLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
+      const response = await fetch(`http://192.168.1.214:3000/getStartLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -35,7 +35,7 @@ export default function Map() {
 
   async function getClosestEndStation(lat, lon) {
     try {
-      const response = await fetch(`http://192.168.10.177:3000/getEndLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
+      const response = await fetch(`http://192.168.1.214:3000/getEndLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -151,14 +151,10 @@ export default function Map() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // paddingTop: screenHeight * 5/100,
-    backgroundColor: 'black',
-    height: 840,
-    width: 'auto',
-    padding: 0,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+      },
   innerShadow: {
     position: 'absolute',
     left: 0,
@@ -180,8 +176,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 30,
   },
-  mapDisplay:{
-    transform: [{translateY: -(screenHeight * 10/100)}]
+  mapDisplay: {
+    flex: 1,
   },
   text: {
     paddingLeft: 20,

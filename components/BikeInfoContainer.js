@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-import { Modalize } from 'react-native-modalize';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { View, Dimensions, StyleSheet, Platform } from 'react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MapDisplay from './MapDisplay';
 import ExtraInfoCard from '../components/ExtraInfoCard';
@@ -8,47 +8,31 @@ import svgWhiteClock from '../assets/svgs/svgWhiteClock';
 import svgRedTimer from '../assets/svgs/svgRedTimer';
 import svgRedDockedBicycle from '../assets/svgs/svgRedDockedBicycle';
 import svgWhiteBicycle from '../assets/svgs/svgWhiteBicycle';
+import CustomBackground from './CustomBackground';
 
-const screenHeight = Dimensions.get('window').height
-const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 export default function BikeInfoContainer({ location, startStation, endStation }) {
-  const modalizeRef = useRef(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const bottomSheetRef = useRef(null);
 
-  const preventClosing = () => true;
-
-  const handleStyle = isModalOpen
-    ? styles.handleOpen
-    : styles.handleClosed;
-
+  const snapPoints = useMemo(() => ['16%', '90%'], []);
   useEffect(() => {
-    modalizeRef.current?.open();
+    bottomSheetRef.current?.expand();
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, marginTop: 80, width: screenWidth, }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <MapDisplay
-          location={location}
-        />
-        <Modalize
-        ref={modalizeRef}
-          snapPoint={screenHeight * 20/100}
-          modalHeight={screenHeight * 70/100}
-          alwaysOpen={100}
-          onOverlayPress={preventClosing}
-          onBackButtonPress={preventClosing}
-          adjustToContentHeight={false}
-          avoidKeyboardLikeIOS={true}
-          modalStyle={{
-            backgroundColor: 'transparent',
-            shadowColor: 'transparent'
-          }}
-          handleStyle={styles.handle}
+        <MapDisplay location={location} />
+        <BottomSheet
+          ref={bottomSheetRef}
+          snapPoints={snapPoints}
+          enablePanDownToClose={true}
+          handleIndicatorStyle={styles.handle}
+          backgroundComponent={(props) => <CustomBackground {...props} />}
         >
           <View style={styles.infoContainer}>
-            {/* <Text style={[{color: 'white', paddingTop: 7}]}>Swipe up for more</Text> */}
             <View style={styles.infoSection}>
               <View style={styles.bikeInfo}>
                 <ExtraInfoCard
@@ -80,18 +64,16 @@ export default function BikeInfoContainer({ location, startStation, endStation }
               </View>
             </View>
           </View>
-        </Modalize>
+        </BottomSheet>
       </View>
     </GestureHandlerRootView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: screenHeight * 82/100,
-    backgroundColor: 'transparent',
-    borderRadius: 30,
-  },
+    container: {
+        flex: 1,
+      },
   infoContainer:{
     height: screenHeight * 65/100,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -119,5 +101,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     marginTop: 20
-  }
-})
+  },
+//   background: {
+//     flex: 1,
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)'
+//   },
+});

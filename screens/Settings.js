@@ -13,10 +13,15 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Settings() {
+  const [hasPermission, setHasPermission] = useState(false);
   const navigation = useNavigation();
 
   // Variables for the user metrics
@@ -24,10 +29,48 @@ export default function Settings() {
   const [co2Saved, setCo2Saved] = useState(10.0);
   const [moneySaved, setMoneySaved] = useState(500);
 
+  //TODO: Notification checkpoint: Notifications permission working, need to check and fix
+  // warning: Property 'Alert' doesn't exist
+  const enableNotifications = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Alert.alert('Failed to get push token for push notification!');
+        return;
+      }
+      setHasPermission(true);
+      Alert.alert('Notifications enabled!');
+    } else {
+      Alert.alert('Push notification only works in actual device, do not use VM');
+    }
+
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    try {
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId || Constants.manifest.extra.eas.projectId; // TODO: Check manifest
+      const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+      console.log(token);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+
   // Methods for buttons in settings
   const handleNotificationsPress = () => {
-    alert("Notifications clicked!");
-    //TODO
+    enableNotifications();
   };
 
   const handleFaqPress = () => {

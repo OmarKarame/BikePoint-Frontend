@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Platform
+  Platform,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -29,8 +30,6 @@ export default function Settings() {
   const [co2Saved, setCo2Saved] = useState(10.0);
   const [moneySaved, setMoneySaved] = useState(500);
 
-  //TODO: Notification checkpoint: Notifications permission working, need to check and fix
-  // warning: Property 'Alert' doesn't exist
   const enableNotifications = async () => {
     if (Device.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -59,7 +58,7 @@ export default function Settings() {
     }
 
     try {
-      const projectId = Constants.expoConfig?.extra?.eas?.projectId || Constants.manifest.extra.eas.projectId; // TODO: Check manifest
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
       const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
       console.log(token);
     } catch (e) {

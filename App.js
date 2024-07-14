@@ -29,7 +29,9 @@ if (__DEV__) {
     ];
   
     console.error = (message) => {
-      if (ignoredWarnings.some(warning => message.includes(warning))) {
+      if (typeof message === 'string' && ignoredWarnings.some(warning => message.includes(warning))) {
+        return;
+      } else if (typeof message === 'object' && message.message && ignoredWarnings.some(warning => message.message.includes(warning))) {
         return;
       }
       // Continue logging other warnings as normal
@@ -44,18 +46,34 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+/**
+ * For full notification implementation in future, need to add a few things
+ * - Add notification scheduling system, possibly functions,
+ * - Update screens and components to use the notifications
+ */
 
 
 export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
+  
 
   // Listeners and handlers for incoming and interacting with notifications
   useEffect(() => {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+    
+    // Listener for when a notification is received while the app is in the foreground
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log(notification);
     });
 
+    // Listener for when a user interacts with a notification
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });

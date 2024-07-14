@@ -7,17 +7,22 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Platform
+  Platform,
+  Modal
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Linking from 'expo-linking';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Settings() {
   const navigation = useNavigation();
+
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   // Variables for the user metrics
   const [calories, setCalories] = useState(1230);
@@ -41,13 +46,23 @@ export default function Settings() {
   };
 
   const handleContactPress = () => {
-    alert("Contact Us clicked!");
-    //TODO
+    setModalVisible(true);
   };
 
   const handleRateAppPress = () => {
     alert("Rate the app clicked!");
     //TODO
+  };
+
+  // Methods used within contact modal
+  const handleEmailPress = () => {
+    Linking.openURL('mailto:testmailbikepoint@gmail.com');
+    setModalVisible(false);
+  };
+
+  const handleCallPress = () => {
+    Linking.openURL('tel:+447123456789');
+    setModalVisible(false);
   };
 
   return (
@@ -140,7 +155,7 @@ export default function Settings() {
           activeOpacity={0.5}
         >
           <View style={styles.buttonTextContainer}>
-            <Ionicons name="mail-outline" size={24} color="black" />
+            <Ionicons name="people-circle-outline" size={24} color="black" />
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>Contact Us</Text>
               <Text style={styles.subheaderText}>
@@ -209,6 +224,44 @@ export default function Settings() {
           </View>
         </View>
       </ScrollView>
+
+
+      {/* Contact Us - Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Contact Us</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleEmailPress}
+            >
+              <Ionicons name="mail-outline" size={20} color="white" style={styles.modalIcon}/>
+              <Text style={styles.modalButtonText}>Contact by Email</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleCallPress}
+            >
+              <Ionicons name="call-outline" size={20} color="white" style={styles.modalIcon}/>
+              <Text style={styles.modalButtonText}>Call Us</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 }
@@ -301,5 +354,66 @@ const styles = StyleSheet.create({
     top: 0,
     height: "100%",
     width: "100%",
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
+  },
+  modalContent: {
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderRadius: 15,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    minWidth: screenWidth * 0.8,
+    maxWidth: screenWidth * 0.8
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  modalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ED0000",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+    width: "100%"
+  },
+  modalButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginLeft: 10
+  },
+  modalIcon: {
+    marginLeft: 10
+  },
+  closeButton: {
+    backgroundColor: "gray",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "center"
   },
 });

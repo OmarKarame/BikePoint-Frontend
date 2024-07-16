@@ -1,14 +1,19 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LocationProvider } from './components/LocationContext';
+import NavBarWrapper from './components/NavBarWrapper';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
 import Home from './screens/Home';
 import Chat from './screens/Chat';
 import Map from './screens/Map';
 import Settings from './screens/Settings';
 import Search from './screens/Search';
-import NavBarWrapper from './components/NavBarWrapper';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +29,9 @@ if (__DEV__) {
     ];
   
     console.error = (message) => {
-      if (ignoredWarnings.some(warning => message.includes(warning))) {
+      if (typeof message === 'string' && ignoredWarnings.some(warning => message.includes(warning))) {
+        return;
+      } else if (typeof message === 'object' && message.message && ignoredWarnings.some(warning => message.message.includes(warning))) {
         return;
       }
       // Continue logging other warnings as normal
@@ -32,7 +39,54 @@ if (__DEV__) {
     };
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+/**
+ * For full notification implementation in future, need to add a few things
+ * - Add notification scheduling system, possibly functions,
+ * - Update screens and components to use the notifications
+ */
+
+
 export default function App() {
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  
+
+  // Listeners and handlers for incoming and interacting with notifications
+  useEffect(() => {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+    
+    // Listener for when a notification is received while the app is in the foreground
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log(notification);
+    });
+
+    // Listener for when a user interacts with a notification
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
 
   return (
     <LocationProvider>

@@ -1,4 +1,3 @@
-// import { StatusBar } from 'expo-status-bar';
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -13,6 +12,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from 'expo-blur';
 import * as Linking from 'expo-linking';
 
 const screenWidth = Dimensions.get("window").width;
@@ -22,7 +22,6 @@ export default function Settings() {
   const navigation = useNavigation();
 
   const [modalVisible, setModalVisible] = useState(false);
-
 
   // Variables for the user metrics
   const [calories, setCalories] = useState(1230);
@@ -225,43 +224,43 @@ export default function Settings() {
         </View>
       </ScrollView>
 
-
       {/* Contact Us - Modal */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.modalView}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Contact Us</Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={handleEmailPress}
-            >
-              <Ionicons name="mail-outline" size={20} color="white" style={styles.modalIcon}/>
-              <Text style={styles.modalButtonText}>Contact by Email</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={handleCallPress}
-            >
-              <Ionicons name="call-outline" size={20} color="white" style={styles.modalIcon}/>
-              <Text style={styles.modalButtonText}>Call Us</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+        <BlurView intensity={50} style={styles.absolute} tint="light">
+          <View style={styles.modalView}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>Contact Us</Text>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleEmailPress}
+              >
+                <Ionicons name="mail-outline" size={20} color="white" style={styles.modalIcon} />
+                <Text style={styles.modalButtonText}>Contact by Email</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleCallPress}
+              >
+                <Ionicons name="call-outline" size={20} color="white" style={styles.modalIcon} />
+                <Text style={styles.modalButtonText}>Call Us</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </BlurView>
       </Modal>
-
     </View>
   );
 }
@@ -272,7 +271,7 @@ const styles = StyleSheet.create({
   },
   header: {
     zIndex: 2,
-    height: Platform.OS === 'ios'? 150: 0.15*screenHeight,
+    height: Platform.OS === 'ios' ? 150 : 0.15 * screenHeight,
     width: screenWidth,
     backgroundColor: "#ED0000",
     justifyContent: "flex-end",
@@ -359,7 +358,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)"
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   modalContent: {
     backgroundColor: "rgba(255, 255, 255, 1)",

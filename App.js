@@ -13,7 +13,8 @@ import Chat from './screens/Chat';
 import Map from './screens/Map';
 import Settings from './screens/Settings';
 import Search from './screens/Search';
-
+import NavBarWrapper from './components/NavBarWrapper';
+import { GestureHandlerRootView } from 'react-native-gesture-handler'; 
 
 const Stack = createNativeStackNavigator();
 
@@ -89,6 +90,7 @@ export default function App() {
   }, []);
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}> 
     <LocationProvider>
       <NavigationContainer>
           <View style={styles.container}>
@@ -103,6 +105,7 @@ export default function App() {
           </View>
       </NavigationContainer>
     </LocationProvider>
+    </GestureHandlerRootView>
   );
 }
 

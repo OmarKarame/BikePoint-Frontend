@@ -78,20 +78,27 @@ export default function Map() {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
-        return;
-      }
-      Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          distanceInterval: 2,
-        },
-        (newLocation) => {
-          setLocation(newLocation.coords);
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.error('Permission to access location was denied');
+          return;
         }
-      );
+        Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            distanceInterval: 2,
+          },
+          (newLocation) => {
+            // newLocation might be null, so doing 'optional chaining'
+            if (newLocation?.coords) {
+              setLocation(newLocation.coords);
+            }
+          }
+        );
+      } catch (error) {
+        console.error('Error in getting location foreground permission or location coordinates', error);
+      }
     })();
   }, []);
 
@@ -166,13 +173,9 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // paddingTop: screenHeight * 5/100,
-    backgroundColor: 'black',
-    height: 840,
-    width: 'auto',
-    padding: 0,
-  },
+      flex: 1,
+      backgroundColor: 'black',
+    },
   innerShadow: {
     position: 'absolute',
     left: 0,
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
   },
   header: {
     zIndex: 2,
-    height: 150,
+    height: 170,
     width: screenWidth,
     backgroundColor: '#ED0000',
     display: 'flex',
@@ -194,8 +197,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 30,
   },
-  mapDisplay:{
-    transform: [{translateY: -(screenHeight * 10/100)}]
+  mapDisplay: {
+    flex: 1,
   },
   text: {
     paddingLeft: 20,

@@ -1,4 +1,3 @@
-// import { StatusBar } from 'expo-status-bar';
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -7,27 +6,69 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Platform
+  Platform,
+  Modal
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from 'expo-blur';
+import * as Linking from 'expo-linking';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Settings() {
+  const [hasPermission, setHasPermission] = useState(false);
   const navigation = useNavigation();
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Variables for the user metrics
   const [calories, setCalories] = useState(1230);
   const [co2Saved, setCo2Saved] = useState(10.0);
   const [moneySaved, setMoneySaved] = useState(500);
 
+  const enableNotifications = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Alert.alert('Failed to get push token for push notification!');
+        return;
+      }
+      setHasPermission(true);
+      Alert.alert('Notifications enabled!');
+    } else {
+      Alert.alert('Push notification only works in actual device, do not use VM');
+    }
+
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    try {
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+      const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+      console.log(token);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+
   // Methods for buttons in settings
   const handleNotificationsPress = () => {
-    alert("Notifications clicked!");
-    //TODO
+    enableNotifications();
   };
 
   const handleFaqPress = () => {
@@ -41,13 +82,23 @@ export default function Settings() {
   };
 
   const handleContactPress = () => {
-    alert("Contact Us clicked!");
-    //TODO
+    setModalVisible(true);
   };
 
   const handleRateAppPress = () => {
     alert("Rate the app clicked!");
     //TODO
+  };
+
+  // Methods used within contact modal
+  const handleEmailPress = () => {
+    Linking.openURL('mailto:testmailbikepoint@gmail.com');
+    setModalVisible(false);
+  };
+
+  const handleCallPress = () => {
+    Linking.openURL('tel:+447123456789');
+    setModalVisible(false);
   };
 
   return (
@@ -140,7 +191,7 @@ export default function Settings() {
           activeOpacity={0.5}
         >
           <View style={styles.buttonTextContainer}>
-            <Ionicons name="mail-outline" size={24} color="black" />
+            <Ionicons name="people-circle-outline" size={24} color="black" />
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>Contact Us</Text>
               <Text style={styles.subheaderText}>
@@ -209,6 +260,44 @@ export default function Settings() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Contact Us - Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <BlurView intensity={50} style={styles.absolute} tint="light">
+          <View style={styles.modalView}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>Contact Us</Text>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleEmailPress}
+              >
+                <Ionicons name="mail-outline" size={20} color="white" style={styles.modalIcon} />
+                <Text style={styles.modalButtonText}>Contact by Email</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleCallPress}
+              >
+                <Ionicons name="call-outline" size={20} color="white" style={styles.modalIcon} />
+                <Text style={styles.modalButtonText}>Call Us</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </BlurView>
+      </Modal>
     </View>
   );
 }
@@ -219,7 +308,7 @@ const styles = StyleSheet.create({
   },
   header: {
     zIndex: 2,
-    height: Platform.OS === 'ios'? 150: 0.15*screenHeight,
+    height: Platform.OS === 'ios' ? 150 : 0.15 * screenHeight,
     width: screenWidth,
     backgroundColor: "#ED0000",
     justifyContent: "flex-end",
@@ -301,5 +390,73 @@ const styles = StyleSheet.create({
     top: 0,
     height: "100%",
     width: "100%",
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  modalContent: {
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderRadius: 15,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    minWidth: screenWidth * 0.8,
+    maxWidth: screenWidth * 0.8
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  modalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ED0000",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+    width: "100%"
+  },
+  modalButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginLeft: 10
+  },
+  modalIcon: {
+    marginLeft: 10
+  },
+  closeButton: {
+    backgroundColor: "gray",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "center"
   },
 });

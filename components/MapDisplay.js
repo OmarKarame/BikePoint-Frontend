@@ -87,7 +87,6 @@ export default function MapDisplay({ location }) {
     }
     const coordinateString = `${start.longitude},${start.latitude};${end.longitude},${end.latitude}`;
     const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${coordinateString}?alternatives=true&continue_straight=true&geometries=polyline&language=en&overview=full&steps=true&access_token=${REACT_APP_MAPBOX_API_KEY}`;
-    console.log("api call");
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -121,7 +120,7 @@ export default function MapDisplay({ location }) {
       !endStation?.lat ||
       !endStation?.lon
     ) {
-      console.log("Stations not fully defined");
+      // console.log("Stations not fully defined");
       return;
     }
 
@@ -144,7 +143,7 @@ export default function MapDisplay({ location }) {
       startStation === prevStartStation.current &&
       endStation === prevEndStation.current
     ) {
-      console.log("No changes in coordinates or stations");
+      // console.log("No changes in coordinates or stations");
       return;
     }
 
@@ -211,13 +210,9 @@ export default function MapDisplay({ location }) {
     // console.log("Start Station:", startStation.commonName);
     // console.log("End Station:", endStation.commonName);
     if (startStation != undefined && endStation != undefined) {
-      console.log("test 1");
-      console.log(walkingRoute1);
       loadRoute();
     } else {
       // Set fromLocation and toLocation and their coordinates to empty strings and null respectively
-      console.log("test 2");
-      // Create popup that says "Please search for a location" and an OK button that takes me to navigation.navigate('Search', {})
       Alert.alert("Location Required", "Please search for a location", [
         {
           text: "OK",

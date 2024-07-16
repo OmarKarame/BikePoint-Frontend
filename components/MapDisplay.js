@@ -37,7 +37,8 @@ export default function MapDisplay({ location }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: screenHeight * 82/100,
+    height: screenHeight * 84/100,
+    transform: [{ translateY: -15 }],
     width: screenWidth,
     ...StyleSheet.absoluteFillObject,
   },

@@ -151,10 +151,10 @@ export default function Map() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'black',
-      },
+  container: {
+      flex: 1,
+      backgroundColor: 'black',
+    },
   innerShadow: {
     position: 'absolute',
     left: 0,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   header: {
     zIndex: 2,
-    height: 150,
+    height: 170,
     width: screenWidth,
     backgroundColor: '#ED0000',
     display: 'flex',

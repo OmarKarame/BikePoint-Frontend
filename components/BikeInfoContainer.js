@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import { View, Dimensions, StyleSheet, Platform } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MapDisplay from './MapDisplay';
@@ -16,10 +16,18 @@ const screenWidth = Dimensions.get('window').width;
 export default function BikeInfoContainer({ location, startStation, endStation }) {
   const bottomSheetRef = useRef(null);
 
-  const snapPoints = useMemo(() => ['16%', '90%'], []);
+  const snapPoints = useMemo(() => ['20%', '90%'], []);
+
   useEffect(() => {
     bottomSheetRef.current?.expand();
   }, []);
+
+  const handleSheetChanges = (index) => {
+    if (index === -1) {
+      // If the sheet is closed, expand it back to the minimum snap point
+      bottomSheetRef.current?.snapTo(0);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -28,9 +36,10 @@ export default function BikeInfoContainer({ location, startStation, endStation }
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints}
-          enablePanDownToClose={true}
+          enablePanDownToClose={false}
           handleIndicatorStyle={styles.handle}
           backgroundComponent={(props) => <CustomBackground {...props} />}
+          onChange={handleSheetChanges}
         >
           <View style={styles.infoContainer}>
             <View style={styles.infoSection}>
@@ -71,11 +80,11 @@ export default function BikeInfoContainer({ location, startStation, endStation }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-      },
-  infoContainer:{
-    height: screenHeight * 65/100,
+  container: {
+    flex: 1,
+  },
+  infoContainer: {
+    height: screenHeight * 68 / 100,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderRadius: 20,
     alignItems: 'center',
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
   infoSection: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop: 80
+    marginTop: 80,
   },
   handle: {
     width: 80,
@@ -95,15 +104,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  timeInfo:{
+  timeInfo: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
-//   background: {
-//     flex: 1,
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)'
-//   },
 });

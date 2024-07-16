@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { SvgXml } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react'
+import React, { useContext } from 'react';
+
 
 const screenHeight = Dimensions.get('window').height
 const screenWidth = Dimensions.get('window').width

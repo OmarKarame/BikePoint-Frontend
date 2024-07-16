@@ -1,24 +1,36 @@
-import { StyleSheet, Text, View, Dimensions, SectionList, TouchableOpacity, Image } from 'react-native'
-import React, { useEffect, useState, useContext } from 'react'
+import { StyleSheet, Text, View, Dimensions, SectionList, TouchableOpacity, Image, Button } from 'react-native';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
+import { REACT_APP_GCP_MAP_API_KEY, REACT_APP_LOCATIONIQ_API_KEY } from '@env';
+import debounce from 'lodash.debounce';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LocationSearchContainer from '../components/LocationSearchContainer'
+import LocationSearchContainer from '../components/LocationSearchContainer';
 import LocationContext from '../components/LocationContext';
-import CurrentLocationIcon from '../assets/images/current-location.png'
-import LocationIcon from '../assets/images/location-icon.png'
+import CurrentLocationIcon from '../assets/images/current-location.png';
+import LocationIcon from '../assets/images/location-icon.png';
 
-const screenHeight = Dimensions.get('window').height
-const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 export default function Search() {
-  // const [yourLocation, setYourLocation] = useState(fromLocation);
   const [recents, setRecents] = useState([]);
+  const [dataJson, setDataJson] = useState([]);
   const [data, setData] = useState([]);
-  // const [toLocationSelected, setToLocationSelected] = useState(false)
-  // const [fromLocationSelected, setFromLocationSelected] = useState(false)
+  const [fromRecentsData, setFromRecentsData] = useState({});
+  const [toRecentsData, setToRecentsData] = useState({});
+  const [tempFromLat, setTempFromLat] = useState(null);
+  const [tempFromLon, setTempFromLon] = useState(null);
+  const [tempToLat, setTempToLat] = useState(null);
+  const [tempToLon, setTempToLon] = useState(null);
+  const [mostRecentFocus, setMostRecentFocus] = useState(null);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
+  const [toPlaceSelected, setToPlaceSelected] = useState(false);
+  const [fromPlaceSelected, setFromPlaceSelected] = useState(true);
 
   const {
+    currentPosition,
+    setCurrentPosition,
     fromLocation,
     setFromLocation,
     toLocation,
@@ -32,15 +44,22 @@ export default function Search() {
     isToFocused,
     setIsToFocused,
     currentLocation,
-    setCurrentLocation
+    setCurrentLocation,
+    fromLat,
+    setFromLat,
+    fromLon,
+    setFromLon,
+    toLat,
+    setToLat,
+    toLon,
+    setToLon,
   } = useContext(LocationContext);
 
   const addRecent = async (newAddress) => {
     setRecents(currentRecents => {
-      if (currentRecents.includes(newAddress)) {
+      if (currentRecents.some(recent => recent.display_name === newAddress.display_name)) {
         return currentRecents;
       }
-
       const updatedRecents = currentRecents.length >= 10 ? currentRecents.slice(1) : [...currentRecents];
       updatedRecents.push(newAddress);
 
@@ -52,26 +71,50 @@ export default function Search() {
     });
   };
 
-  const toggleToIcon = (section) => {
-    if (section.title == 'Your Location'){
-      setIsToCurrentLocation(true)
-    }
-    else{
-      setIsToCurrentLocation(false)
-    }
-  }
-  const toggleFromIcon = (section) => {
-    if (section.title == 'Your Location'){
-      setIsFromCurrentLocation(true)
-    }
-    else{
-      setIsFromCurrentLocation(false)
-    }
-  }
+  const clearRecents = async () => {
+    setRecents([]);
+    await AsyncStorage.removeItem('recents').catch(err => {
+      console.error('Failed to clear recents:', err);
+    });
+  };
 
+  const handleGoPress = () => {
+    if (isFromFocused) {
+      setFromLat(tempFromLat);
+      setFromLon(tempFromLon);
+    } else {
+      setToLat(tempToLat);
+      setToLon(tempToLon);
+    }
+
+    const locationToAdd = isFromFocused ? fromRecentsData : toRecentsData;
+    if (locationToAdd) {
+      addRecent({
+        display_place: locationToAdd.display_place,
+        display_name: locationToAdd.display_name,
+        lat: locationToAdd.lat,
+        lon: locationToAdd.lon,
+      });
+    }
+  };
+
+  const toggleToIcon = (section) => {
+    if (section.title === 'Your Location') {
+      setIsToCurrentLocation(true);
+    } else {
+      setIsToCurrentLocation(false);
+    }
+  };
+
+  const toggleFromIcon = (section) => {
+    if (section.title === 'Your Location') {
+      setIsFromCurrentLocation(true);
+    } else {
+      setIsFromCurrentLocation(false);
+    }
+  };
 
   useEffect(() => {
-    // Load recents from AsyncStorage
     AsyncStorage.getItem('recents').then(data => {
       if (data) {
         setRecents(JSON.parse(data));
@@ -81,157 +124,51 @@ export default function Search() {
     });
   }, []);
 
-
-  // Create a variable that stores a boolean of the focus of the text input of the fromLocation and toLocation
-  // Filter based on which is in focus
-  const filterSections = () => {
-    let sections = [
-      {
-        id: '0',
-        title: 'Your Location',
-        data: [currentLocation],
-        image: CurrentLocationIcon
-      },
-      {
-        id: '1',
-        title: 'Recents',
-        data: recents,
-        image: LocationIcon
-      },
-      {
-        id: '2',
-        title: 'Places',
-        data: [
-          "British Museum",
-          "Tower of London",
-          "Buckingham Palace",
-          "The Shard",
-          "Natural History Museum",
-          "London Eye",
-          "Tate Modern",
-          "Science Museum",
-          "Victoria and Albert Museum",
-          "Tower Bridge",
-          "Royal Observatory Greenwich",
-          "St. Paul's Cathedral",
-          "Westminster Abbey",
-          "Hyde Park",
-          "Churchill War Rooms",
-          "Kensington Palace",
-          "Covent Garden",
-          "Piccadilly Circus",
-          "The National Gallery",
-          "The Museum of London",
-          "Hampton Court Palace",
-          "ZSL London Zoo",
-          "Trafalgar Square",
-          "The Royal Air Force Museum",
-          "Shakespeare's Globe",
-          "Somerset House",
-          "The British Library",
-          "Regent's Park",
-          "Camden Market",
-          "The Gherkin",
-          "Houses of Parliament",
-          "The Royal Albert Hall",
-          "Madame Tussauds",
-          "The London Dungeon",
-          "The O2",
-          "Little Venice",
-          "The Wallace Collection",
-          "Leicester Square",
-          "Greenwich Park",
-          "Barbican Centre",
-          "London Transport Museum",
-          "Carnaby Street",
-          "Borough Market",
-          "Chinatown",
-          "Kew Gardens",
-          "Imperial War Museum",
-          "Harrods",
-          "The Design Museum",
-          "Wembley Stadium",
-          "Battersea Power Station",
-          "Sky Garden",
-          "Old Royal Naval College",
-          "Serpentine Gallery",
-          "Thames River Cruise",
-          "St. James's Park",
-          "Oxford Street",
-          "Whitechapel Gallery",
-          "BFI Southbank",
-          "Queen Elizabeth Olympic Park",
-          "Neal's Yard",
-          "Saatchi Gallery",
-          "Millennium Bridge",
-          "Southbank Centre",
-          "The Courtauld Gallery",
-          "Canary Wharf",
-          "Hampstead Heath",
-          "Brick Lane",
-          "Royal Courts of Justice",
-          "London Bridge",
-          "Chelsea Physic Garden",
-          "The Clink Prison Museum",
-          "Museum of London Docklands",
-          "Bank of England Museum",
-          "Richmond Park",
-          "Museum of Comedy",
-          "The Monument",
-          "Holland Park",
-          "Cutty Sark",
-          "Emirates Air Line cable car",
-          "Guildhall",
-          "Royal Exchange",
-          "Tate Britain",
-          "Crystal Palace Park",
-          "Dulwich Picture Gallery",
-          "London Aquarium",
-          "Alexandra Palace",
-          "Benjamin Franklin House",
-          "King's Cross Station",
-          "Queen's House",
-          "Royal Botanic Gardens, Kew",
-          "Fulham Palace",
-          "Museum of Brands",
-          "The Postal Museum",
-          "Primrose Hill",
-          "Science Gallery",
-          "St Katharine Docks",
-          "Wellcome Collection",
-          "Whitehall",
-          "Pudding Lane",
-          "Apsley House",
-          "Fortnum & Mason",
-          "Dr. Johnson's House",
-          "Smithfield Market"
-        ],
-        image: LocationIcon
-      },
-    ];
-    if (!isFromFocused && !isToFocused) {
-      return sections;
+  const maxLength = (text) => {
+    if (text.length > 70) {
+      return `${text.slice(0,70)}...`;
     } else {
-      const activeInput = isFromFocused ? fromLocation : toLocation;
-      if (activeInput === '') {
-        return sections.filter(section => ['Your Location', 'Recents'].includes(section.title));
-      } else {
-        // Filter only 'Places' based on the active input, and hide 'Your Location' and 'Recents'
-        return sections.map(section => {
-          if (section.title === 'Places') {
-            const filteredData = section.data.filter(place => place.toLowerCase().startsWith(activeInput.toLowerCase()));
-            return { ...section, data: filteredData };
-          }
-          return { ...section, data: [] }; // Clear the data for 'Your Location' and 'Recents'
-        }).filter(section => section.data.length > 0); // Remove sections that have no data
-      }
+      return text;
+    }
+  };
+
+  const filterSections = () => {
+    if ((mostRecentFocus === 'from' && fromLocation !== '') || (mostRecentFocus === 'to' && toLocation !== '')) {
+      return [
+        {
+          id: '2',
+          title: 'Places',
+          data: Array.isArray(dataJson) ? dataJson.map(place => ({
+            display_place: place.display_place,
+            display_name: maxLength(place.display_name),
+            lat: place.lat,
+            lon: place.lon,
+          })) : [],
+          image: LocationIcon
+        },
+      ];
+    } else {
+      return [
+        {
+          id: '0',
+          title: 'Your Location',
+          data: [{ display_place: 'Current Location', display_name: currentLocation }],
+          image: CurrentLocationIcon
+        },
+        {
+          id: '1',
+          title: 'Recents',
+          data: recents,
+          image: LocationIcon
+        },
+      ];
     }
   };
 
   useEffect(() => {
     setData(filterSections());
-  }, [fromLocation, toLocation, isFromFocused, isToFocused, recents, currentLocation]);
-
+    updateLocationSelectionStatus(); // Update location selection status whenever the data changes
+  }, [fromLocation, toLocation, mostRecentFocus, recents, currentLocation, dataJson]);
 
   useEffect(() => {
     (async () => {
@@ -244,44 +181,106 @@ export default function Search() {
       let { latitude, longitude } = location.coords;
       const address = await Location.reverseGeocodeAsync({ latitude, longitude });
       setFromLocation(`${address[0].city}, ${address[0].street}`);
+      setFromLat(latitude);
+      setFromLon(longitude);
     })();
   }, []);
 
+  async function getLocationData(location) {
+    const response = await fetch(`https://api.locationiq.com/v1/autocomplete?key=${REACT_APP_LOCATIONIQ_API_KEY}&q=${location}&limit=10&dedupe=1&viewbox=-0.510375,51.691874,0.334015,51.286760&bounded=1`);
+    const data = await response.json();
+    setDataJson(data);
+  }
+
+  const debouncedGetLocationData = useCallback(debounce((location) => {
+    getLocationData(location);
+  }, 1500), []);
+
+  useEffect(() => {
+    if (fromLocation) {
+      debouncedGetLocationData(fromLocation);
+    }
+  }, [fromLocation]);
+
+  useEffect(() => {
+    // clearRecents()
+    if (toLocation) {
+      debouncedGetLocationData(toLocation);
+    }
+  }, [toLocation]);
+
+  const handleFocus = (input) => {
+    setMostRecentFocus(input);
+    updateLocationSelectionStatus();
+  };
+
+  const updateLocationSelectionStatus = () => {
+    if (!isFromFocused && !isToFocused && toPlaceSelected && fromPlaceSelected) {
+      setIsLocationSelected(true);
+    } else {
+      setIsLocationSelected(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <LocationSearchContainer
           backgroundColor={'#F10000'}
-          addRecent={addRecent}
+          addRecent={handleGoPress}
+          onFromFocus={() => handleFocus('from')}
+          onToFocus={() => handleFocus('to')}
+          arePlacesSelected={(toPlaceSelected && fromPlaceSelected)}
         />
       </View>
       <View style={styles.body}>
-      <SectionList
-        sections={data}
-        keyExtractor={(item, index) => `item-${index}`}
-        renderItem={({ item, section }) => (
-          <TouchableOpacity onPress={() => {
-            const setLocation = isFromFocused ? setFromLocation : setToLocation;
-            setLocation(item);
-            const toggleFunction = isFromFocused ? toggleFromIcon : toggleToIcon;
-            toggleFunction(section);
-          }} style={styles.touchableItem}>
-            <View style={styles.placeContainer}>
-              <Image source={section.image} style={styles.image} />
-              <Text style={styles.place}>{item}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        renderSectionHeader={({ section }) => (
-          <Text style={styles.sectionHeader}>{section.title}</Text>
-        )}
-        // ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // ListEmptyComponent={<Text></Text>}
-      />
+        <SectionList
+          sections={data}
+          keyExtractor={(item, index) => `item-${index}`}
+          renderItem={({ item, section }) => (
+            <TouchableOpacity onPress={() => {
+              const setLocation = mostRecentFocus === 'from' ? setFromLocation : setToLocation;
+              setLocation(item.display_place);
+              if (mostRecentFocus === 'from') {
+                setFromRecentsData({
+                  display_place: item.display_place,
+                  display_name: item.display_name,
+                  lat: isFromCurrentLocation ? currentPosition.lat : item.lat,
+                  lon: isFromCurrentLocation ? currentPosition.lon : item.lon,
+                });
+                setTempFromLat(item.lat);
+                setTempFromLon(item.lon);
+              } else {
+                setToRecentsData({
+                  display_place: item.display_place,
+                  display_name: item.display_name,
+                  lat: isToCurrentLocation ? currentPosition.lat : item.lat,
+                  lon: isToCurrentLocation ? currentPosition.lon : item.lon,
+                });
+                setTempToLat(item.lat);
+                setTempToLon(item.lon);
+              }
+              const toggleFunction = mostRecentFocus === 'from' ? toggleFromIcon : toggleToIcon;
+              toggleFunction(section);
+              mostRecentFocus === 'from' ? setFromPlaceSelected(true) : setToPlaceSelected(true)
+              updateLocationSelectionStatus(); // Update location selection status after selecting a location
+            }} style={styles.touchableItem}>
+              <View style={styles.placeContainer}>
+                <Image source={section.image} style={styles.image} />
+                <View>
+                  <Text style={styles.place}>{item.display_place}</Text>
+                  <Text style={styles.secondaryPlace}>{item.display_name}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+          renderSectionHeader={({ section }) => (
+            <Text style={styles.sectionHeader}>{section.title}</Text>
+          )}
+        />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -302,12 +301,11 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   body: {
-    height: screenHeight * 81/100,
-    width: screenWidth * 90/100,
-    // borderWidth: 2,
-    // borderBlockColor: 'black',
+    height: screenHeight * 81 / 100,
+    width: screenWidth * 90 / 100,
     transform: [{ translateY: -65 }],
-    zIndex: 21
+    zIndex: 21,
+    paddingBottom: 100,
   },
   touchableItem: {
     backgroundColor: 'white',
@@ -324,9 +322,15 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   place: {
-    fontSize: 16,
+    fontSize: 13,
     color: '#333',
     fontWeight: '600',
+    marginLeft: 5,
+  },
+  secondaryPlace: {
+    fontSize: 8,
+    color: '#333',
+    fontWeight: '400',
     marginLeft: 5,
   },
   placeContainer: {

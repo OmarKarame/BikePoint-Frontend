@@ -19,6 +19,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Settings() {
+  const [hasPermission, setHasPermission] = useState(false);
   const navigation = useNavigation();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,10 +29,46 @@ export default function Settings() {
   const [co2Saved, setCo2Saved] = useState(10.0);
   const [moneySaved, setMoneySaved] = useState(500);
 
+  const enableNotifications = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Alert.alert('Failed to get push token for push notification!');
+        return;
+      }
+      setHasPermission(true);
+      Alert.alert('Notifications enabled!');
+    } else {
+      Alert.alert('Push notification only works in actual device, do not use VM');
+    }
+
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    try {
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+      const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+      console.log(token);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+
   // Methods for buttons in settings
   const handleNotificationsPress = () => {
-    alert("Notifications clicked!");
-    //TODO
+    enableNotifications();
   };
 
   const handleFaqPress = () => {
@@ -358,6 +395,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
   absolute: {
     position: 'absolute',

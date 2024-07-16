@@ -11,7 +11,10 @@ const screenHeight = Dimensions.get('window').height
 const screenWidth = Dimensions.get('window').width
 
 export default function Map() {
-  const { fromLocation, toLocation, numBikes } = useContext(LocationContext);
+  const { fromLocation, toLocation, numBikes, currentPosition, fromLat,
+    fromLon,
+    toLat,
+    toLon, } = useContext(LocationContext);
 
   const [start, setStart] = useState(fromLocation);
   const [location, setLocation] = useState(null);
@@ -21,7 +24,7 @@ export default function Map() {
 
   async function getClosestStartStation(lat, lon) {
     try {
-      const response = await fetch(`http://192.168.10.177:3000/getStartLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
+      const response = await fetch(`http://10.80.105.99:3000/getStartLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -35,7 +38,7 @@ export default function Map() {
 
   async function getClosestEndStation(lat, lon) {
     try {
-      const response = await fetch(`http://192.168.10.177:3000/getEndLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
+      const response = await fetch(`http://10.80.105.99:3000/getEndLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -116,13 +119,21 @@ export default function Map() {
     }
   }, [fromLocation]); // Fetch when fromLocation changes
 
-  useEffect(() => {
-    console.log(startStation);
-  }, [startStation]);
+  // useEffect(() => {
+  //   console.log(startStation);
+  // }, [startStation]);
+
+  // useEffect(() => {
+  //   console.log(endStation);
+  // }, [endStation]);
 
   useEffect(() => {
-    console.log(endStation);
-  }, [endStation]);
+    // console.log(currentPosition);
+    // console.log(fromLat);
+    // console.log(fromLon);
+    // console.log(toLat);
+    // console.log(toLon);
+  }, [toLon])
 
   const navigation = useNavigation();
 
@@ -152,13 +163,9 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // paddingTop: screenHeight * 5/100,
-    backgroundColor: 'black',
-    height: 840,
-    width: 'auto',
-    padding: 0,
-  },
+      flex: 1,
+      backgroundColor: 'black',
+    },
   innerShadow: {
     position: 'absolute',
     left: 0,
@@ -168,7 +175,7 @@ const styles = StyleSheet.create({
   },
   header: {
     zIndex: 2,
-    height: 150,
+    height: 170,
     width: screenWidth,
     backgroundColor: '#ED0000',
     display: 'flex',
@@ -180,8 +187,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 30,
   },
-  mapDisplay:{
-    transform: [{translateY: -(screenHeight * 10/100)}]
+  mapDisplay: {
+    flex: 1,
   },
   text: {
     paddingLeft: 20,

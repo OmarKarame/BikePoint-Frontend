@@ -377,17 +377,18 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     borderRadius: 10,
     backgroundColor: "rgba(0, 0, 0, 0.85)",
-    marginTop: 20
+    marginTop: 20,
   },
   bottomSectionTitle: {
     marginBottom: 30
   },
   bottomSectionTitleText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
     fontWeight: "bold",
     textAlign: "center",
+    opacity: 0.6,
   },
   bottomSectionContent: {
     width: '100%',
@@ -397,6 +398,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: "center",
+    opacity: 0.6,
   },
   iconBackground: {
     backgroundColor: "red",
@@ -467,7 +469,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
-    marginLeft: 10
+    marginLeft: 10,
   },
   modalIcon: {
     marginLeft: 10

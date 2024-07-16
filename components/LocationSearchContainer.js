@@ -37,7 +37,11 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
     setFromLat,
     setFromLon,
     setToLat,
-    setToLon
+    setToLon,
+    searchFlag,
+    setSearchFlag,
+    secondSearchFlag,
+    setSecondSearchFlag
   } = useContext(LocationContext);
 
   const navigation = useNavigation();
@@ -110,6 +114,8 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
 
   const handleSearch = () => {
     if (fromLocation && toLocation !== '' && arePlacesSelected) {
+      setSearchFlag(!searchFlag)
+      setSecondSearchFlag(secondSearchFlag)
       addRecent(toLocation);
       navigation.navigate('Map', {});
     } else {

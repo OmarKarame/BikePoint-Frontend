@@ -232,31 +232,36 @@ export default function Settings() {
 
         {/* User Metrics */}
         <View style={styles.bottomSection}>
-          <View style={styles.iconContainer}>
-            <View style={styles.iconBackground}>
-              <Ionicons name="fitness-outline" size={30} color="white" />
-            </View>
-            <Text style={styles.iconText}>
-              {calories}
-              {"\n"}Calories
-            </Text>
+          <View style={styles.bottomSectionTitle}>
+            <Text style={styles.bottomSectionTitleText}>Coming Soon</Text>
           </View>
-          <View style={styles.iconContainer}>
-            <View style={styles.iconBackground}>
-              <Ionicons name="cloud-outline" size={30} color="white" />
+          <View style={styles.bottomSectionContent}>
+            <View style={styles.iconContainer}>
+              <View style={styles.iconBackground}>
+                <Ionicons name="fitness-outline" size={30} color="white" />
+              </View>
+              <Text style={styles.iconText}>
+                {calories}
+                {"\n"}Calories
+              </Text>
             </View>
-            <Text style={styles.iconText}>
-              {co2Saved} kg{"\n"}CO2 Saved
-            </Text>
-          </View>
-          <View style={styles.iconContainer}>
-            <View style={styles.iconBackground}>
-              <Ionicons name="cash-outline" size={30} color="white" />
+            <View style={styles.iconContainer}>
+              <View style={styles.iconBackground}>
+                <Ionicons name="cloud-outline" size={30} color="white" />
+              </View>
+              <Text style={styles.iconText}>
+                {co2Saved} kg{"\n"}CO2 Saved
+              </Text>
             </View>
-            <Text style={styles.iconText}>
-              £{moneySaved}
-              {"\n"}Saved
-            </Text>
+            <View style={styles.iconContainer}>
+              <View style={styles.iconBackground}>
+                <Ionicons name="cash-outline" size={30} color="white" />
+              </View>
+              <Text style={styles.iconText}>
+                £{moneySaved}
+                {"\n"}Saved
+              </Text>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -363,14 +368,37 @@ const styles = StyleSheet.create({
     right: -15, // negative otherwise it goes within the buttons, theres border for ionicons
   },
   bottomSection: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
+    flexDirection: "column",
+    // justifyContent: "space-around",
+    // alignItems: 'space-around',
+    width: "90%",
+    height: 190,
     padding: 20,
     marginBottom: 100,
+    borderRadius: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    marginTop: 20,
+  },
+  bottomSectionTitle: {
+    marginBottom: 30
+  },
+  bottomSectionTitleText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: "bold",
+    fontWeight: "bold",
+    textAlign: "center",
+    opacity: 0.6,
+  },
+  bottomSectionContent: {
+    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: 'center',
   },
   iconContainer: {
     alignItems: "center",
+    opacity: 0.6,
   },
   iconBackground: {
     backgroundColor: "red",
@@ -379,7 +407,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     marginTop: 5,
-    color: "black",
+    color: "white",
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
@@ -441,7 +469,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
-    marginLeft: 10
+    marginLeft: 10,
   },
   modalIcon: {
     marginLeft: 10

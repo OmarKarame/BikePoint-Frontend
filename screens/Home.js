@@ -8,7 +8,8 @@ import AdditionalContentContainer from '../components/AdditionalContentContainer
 import bikeSpotLogo from '../assets/images/bikespot-logo.png'
 import * as Font from 'expo-font';
 import GetMeSomewhereButton from '../components/GetMeSomewhereButton';
-import santanderBike from '../assets/images/santander-bike.png'
+import santanderBike from '../assets/images/santander-bike.png';
+import bikeImage from '../assets/images/homepage-bike-image.png';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -62,6 +63,9 @@ export default function Home() {
               <Image source={bikeSpotLogo} style={styles.headerLogo} />
             </View>
           </View>
+          <View style={styles.mainImage}>
+            <Image source={bikeImage} style={styles.mainBikeImage} />
+          </View>
           {/* <LocationSearchContainer /> */}
           <GetMeSomewhereButton />
           <AdditionalContentContainer />
@@ -99,19 +103,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     position: 'absolute',
-    top: screenHeight * 8/100
+    top: screenHeight * 8/100,
   },
   headerSection: {
     width: screenWidth * 90/100,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: '10%',
-    // transform: [{ translateX: - screenWidth * 12/100}]
+    transform: [{ translateY: - screenWidth *5/100}]
   },
   headerTextSection:{
     width: '74%',
     // backgroundColor: 'red',
-    marginBottom: 12,
+    marginBottom: 8,
     borderRadius: 8,
     alignItems: 'flex-start',
     justifyContent: 'center'
@@ -140,6 +143,19 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     marginTop: 4,
+  },
+  mainImage: {
+    height: 350,
+    width: screenWidth * 90/100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'black',
+    marginBottom: 20,
+    transform: [{ translateY: - screenWidth * 4/100}]
+  },
+  mainBikeImage: {
+    height: '100%',
+    width: '100%',
   },
   footer: {
     width: screenWidth,

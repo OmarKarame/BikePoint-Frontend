@@ -13,8 +13,7 @@ import Chat from './screens/Chat';
 import Map from './screens/Map';
 import Settings from './screens/Settings';
 import Search from './screens/Search';
-import NavBarWrapper from './components/NavBarWrapper';
-import { GestureHandlerRootView } from 'react-native-gesture-handler'; 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,9 +25,9 @@ if (__DEV__) {
       // default props not directly used in code, but some dependencies still use it even with latest version: expo-cli and babel/helpers,
       'This synthetic event is reused for performance reasons. If you\'re seeing this, you\'re %s `%s` on a released/nullified synthetic event. %s. If you must keep the original synthetic event around, use event.persist()',
         // Reason: Unknown for now, docs are outdated and persist didnt work properly (maybe need to use it differently?)
-        
+
     ];
-  
+
     console.error = (message) => {
       if (typeof message === 'string' && ignoredWarnings.some(warning => message.includes(warning))) {
         return;
@@ -57,7 +56,7 @@ Notifications.setNotificationHandler({
 export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
-  
+
 
   // Listeners and handlers for incoming and interacting with notifications
   useEffect(() => {
@@ -68,7 +67,7 @@ export default function App() {
         shouldSetBadge: false,
       }),
     });
-    
+
     // Listener for when a notification is received while the app is in the foreground
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log(notification);
@@ -90,7 +89,7 @@ export default function App() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}> 
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <LocationProvider>
       <NavigationContainer>
           <View style={styles.container}>

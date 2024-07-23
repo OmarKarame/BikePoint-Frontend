@@ -78,7 +78,7 @@ export default function DepartureTime() {
         <View style={styles.mainImage}>
           <Image source={clockIcon} style={styles.image}/>
         </View>
-        <View style={[styles.contentInfo, isNow ? { transform: [{ translateY: -1 }, {translateX: 10}] } : { transform: [{ translateY: -1 }, {translateX: -4}] }]}>
+        <View style={[styles.contentInfo, isNow ? { transform: [{ translateY: -1 }, {translateX: 28}] } : { transform: [{ translateY: -1 }, {translateX: -4}] }]}>
           <DateTimePickerModal
             isVisible={isPickerVisible}
             mode="datetime"

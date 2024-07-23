@@ -56,10 +56,11 @@ const styles = StyleSheet.create({
   container: {
     height: 50,
     width: screenWidth * 90 / 100,
-    borderRadius: 10,
+    borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 5,
     marginBottom: 5,
     overflow: 'hidden',  // Ensure the shadow does not overflow
     position: 'relative',  // Required for absolute positioning of the shadow overlay

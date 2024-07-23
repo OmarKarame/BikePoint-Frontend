@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import { SvgXml } from 'react-native-svg'
 
-export default function TakeMe({ icon, location, isWork }) {
+export default function CustomNotificationsButton({ icon, text }) {
   const [isPressed, setIsPressed] = useState(false);
 
   const handlePressIn = () => {
@@ -11,25 +11,25 @@ export default function TakeMe({ icon, location, isWork }) {
   const handlePressOut = () => setIsPressed(false);
 
   return (
-  <TouchableOpacity
-    activeOpacity={1}
-    style={[styles.container, isPressed ? styles.pressed : {}]}
-    onPressIn={handlePressIn}
-    onPressOut={handlePressOut}
-  >
-    <View style={styles.content}>
-      <SvgXml
-        xml={icon}
-        width="40"
-        height="40"
-        style={styles.icon}
-      />
-      <Text style={styles.setLocation}
-      >
-        To {location}
-      </Text>
-    </View>
-  </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={[styles.container, isPressed ? styles.pressed : {}]}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <View style={styles.content}>
+        <SvgXml
+          xml={icon}
+          width="37"
+          height="37"
+          style={styles.icon}
+        />
+        <Text style={styles.setLocation}
+        >
+          {text}
+        </Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   setLocation: {
-    width: '70%',
+    width: '100%',
     fontSize: 12,
     color: 'black',
     fontWeight: '500',
     textAlign: 'center',
-    marginTop: -6,
+    marginTop: -3,
   },
   icon: {
-
+    marginTop: 4,
   }
 })

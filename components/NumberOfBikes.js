@@ -175,6 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    transform: [{ translateX: -6 }]
+    transform: [{ translateX: 14 }]
   }
 })

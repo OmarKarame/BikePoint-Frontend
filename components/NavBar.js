@@ -11,8 +11,9 @@ import svgMapGreyIconMarkup from '../assets/svgs/svgMapGreyIconMarkup';
 import svgMapRedIconMarkup from '../assets/svgs/svgMapRedIconMarkup';
 import svgSettingsGreyIconMarkup from '../assets/svgs/svgSettingsGreyIconMarkup';
 import svgSettingsRedIconMarkup from '../assets/svgs/svgSettingsRedIconMarkup';
-import svgGreyStatisticsIcon from '../assets/svgs/svgGreyStatisticsIcon';
-import svgRedStatisticsIcon from '../assets/svgs/svgRedStatisticsIcon';
+import svgRedMyStatisticsIcon from '../assets/svgs/svgRedMyStatisticsIcon';
+import svgGreyMyStatisticsIcon from '../assets/svgs/svgGreyMyStatisticsIcon';
+
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -30,7 +31,7 @@ export default function NavBar({ currentPage = 'Home', navigation }) {
   const svgHomeIconMarkup = (isActive) => isActive ? svgHomeRedIconMarkup : svgHomeGreyIconMarkup;
   const svgMapIconMarkup = (isActive) => isActive ? svgMapRedIconMarkup : svgMapGreyIconMarkup;
   const svgSettingsIconMarkup = (isActive) => isActive ? svgSettingsRedIconMarkup : svgSettingsGreyIconMarkup;
-  const svgStatisticsIconMarkup = (isActive) => isActive ? svgRedStatisticsIcon : svgGreyStatisticsIcon;
+  const svgStatisticsIconMarkup = (isActive) => isActive ? svgRedMyStatisticsIcon : svgGreyMyStatisticsIcon;
 
   const translateValue = SelectedPage[currentPage] || 0;
 

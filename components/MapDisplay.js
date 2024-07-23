@@ -36,46 +36,49 @@ export default function MapDisplay({ location = null }) {
 
   const navigation = useNavigation();
 
-  const [initialRegion, setInitialRegion] = useState(null);
+  const [mapRegion, setMapRegion] = useState(null);
+  const [initialLoad, setInitialLoad] = useState(true); // Track initial load
 
-  useEffect(() => {
-    if (location) {
-      setInitialRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-    } else {
-      setInitialRegion({
-        latitude: 51.514156,
-        longitude: -0.12070277,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      });
-    }
-  }, [location]);
+  // Store previous values of location and stations
+  const prevFromLat = useRef(fromLat);
+  const prevFromLon = useRef(fromLon);
+  const prevToLat = useRef(toLat);
+  const prevToLon = useRef(toLon);
+  const prevStartStation = useRef(startStation);
+  const prevEndStation = useRef(endStation);
 
-  useEffect(() => {
-    if (startStation != undefined && endStation != undefined) {
-      loadRoute();
-    } else {
-      Alert.alert("Location Required", "Please search for a location", [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate("Search", {}),
-        },
-      ]);
-    }
-  }, [
-    fromLat,
-    fromLon,
-    toLat,
-    toLon,
-    startStation?.commonName,
-    endStation?.commonName,
-    location,
-  ]);
+  const coordinates = [
+    { longitude: fromLon, latitude: fromLat },
+    { longitude: startStation?.lon, latitude: startStation?.lat },
+    { longitude: endStation?.lon, latitude: endStation?.lat },
+    { longitude: toLon, latitude: toLat },
+  ];
+
+  const calculateRegion = (coords) => {
+    let minLat = coords[0].latitude;
+    let maxLat = coords[0].latitude;
+    let minLon = coords[0].longitude;
+    let maxLon = coords[0].longitude;
+
+    coords.forEach((coord) => {
+      minLat = Math.min(minLat, coord.latitude);
+      maxLat = Math.max(maxLat, coord.latitude);
+      minLon = Math.min(minLon, coord.longitude);
+      maxLon = Math.max(maxLon, coord.longitude);
+    });
+
+    const midLat = (minLat + maxLat) / 2;
+    const midLon = (minLon + maxLon) / 2;
+    const deltaLat = (maxLat - minLat) * 1.2; // Add 20% padding
+    const deltaLon = (maxLon - minLon) * 1.2; // Add 20% padding
+
+    return {
+      latitude: midLat,
+      longitude: midLon,
+      latitudeDelta: Math.max(deltaLat, 0.02),
+      longitudeDelta: Math.max(deltaLon, 0.02),
+    };
+  };
 
   const fetchDirections = async (mode, start, end) => {
     if (!start || !end) {
@@ -87,12 +90,12 @@ export default function MapDisplay({ location = null }) {
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        console.error("Network response was not ok:", response.statusText);
+        console.error("Network response was not ok:", response.statusText); // Log response status
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
       if (!data.routes || data.routes.length === 0) {
-        console.error("No routes found:", data);
+        console.error("No routes found:", data); // Log the data for debugging
         throw new Error("No routes found");
       }
       return {
@@ -106,28 +109,41 @@ export default function MapDisplay({ location = null }) {
   };
 
   const loadRoute = async () => {
+    if (initialLoad) {
+      setInitialLoad(false);
+      return;
+    }
+
     if (
       !startStation?.lat ||
       !startStation?.lon ||
       !endStation?.lat ||
       !endStation?.lon
     ) {
+      // console.log("Stations not fully defined");
       return;
     }
 
-    const coordinates = [
-      { longitude: fromLon, latitude: fromLat },
-      { longitude: startStation?.lon, latitude: startStation?.lat },
-      { longitude: endStation?.lon, latitude: endStation?.lat },
-      { longitude: toLon, latitude: toLat },
-    ];
-
+    // Check if all coordinates are valid
     if (
-      coordinates.some(
-        (coord) => coord.longitude == null || coord.latitude == null
+      !coordinates.every(
+        (coord) => coord.longitude != null && coord.latitude != null
       )
     ) {
       console.log("Some coordinates are not properly defined");
+      return;
+    }
+
+    // Check if any relevant variables have changed
+    if (
+      fromLat === prevFromLat.current &&
+      fromLon === prevFromLon.current &&
+      toLat === prevToLat.current &&
+      toLon === prevToLon.current &&
+      startStation === prevStartStation.current &&
+      endStation === prevEndStation.current
+    ) {
+      // console.log("No changes in coordinates or stations");
       return;
     }
 
@@ -166,98 +182,120 @@ export default function MapDisplay({ location = null }) {
     setCyclingRoute(decodedCyclingRoute);
     setWalkingRoute2(decodedWalkingRoute2);
 
+    // Combine all points to calculate the new region
     const allCoords = [
       ...decodedWalkingRoute1,
       ...decodedCyclingRoute,
       ...decodedWalkingRoute2,
     ];
     const newRegion = calculateRegion(allCoords);
-    setInitialRegion(newRegion);
+    setMapRegion(newRegion);
 
     const totalDuration =
       walkingRoute1.duration + cyclingRoute.duration + walkingRoute2.duration;
     const arrivalTime = new Date();
     arrivalTime.setSeconds(arrivalTime.getSeconds() + totalDuration);
     setArrivalTime(arrivalTime);
+
+    // Update previous values
+    prevFromLat.current = fromLat;
+    prevFromLon.current = fromLon;
+    prevToLat.current = toLat;
+    prevToLon.current = toLon;
+    prevStartStation.current = startStation;
+    prevEndStation.current = endStation;
   };
 
-  const calculateRegion = (coords) => {
-    let minLat = coords[0].latitude;
-    let maxLat = coords[0].latitude;
-    let minLon = coords[0].longitude;
-    let maxLon = coords[0].longitude;
+  useEffect(() => {
+    // console.log("Start Station:", startStation.commonName);
+    // console.log("End Station:", endStation.commonName);
+    if (startStation != undefined && endStation != undefined) {
+      loadRoute();
+    } else {
+      // Set fromLocation and toLocation and their coordinates to empty strings and null respectively
+      Alert.alert("Location Required", "Please search for a location", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Search", {}),
+        },
+      ]);
+    }
 
-    coords.forEach((coord) => {
-      minLat = Math.min(minLat, coord.latitude);
-      maxLat = Math.max(maxLat, coord.latitude);
-      minLon = Math.min(minLon, coord.longitude);
-      maxLon = Math.max(maxLon, coord.longitude);
-    });
-
-    const midLat = (minLat + maxLat) / 2;
-    const midLon = (minLon + maxLon) / 2;
-    const deltaLat = (maxLat - minLat) * 1.2;
-    const deltaLon = (maxLon - minLon) * 1.2;
-
-    return {
-      latitude: midLat,
-      longitude: midLon,
-      latitudeDelta: Math.max(deltaLat, 0.02),
-      longitudeDelta: Math.max(deltaLon, 0.02),
-    };
-  };
+    // Zoom to the user's location when the screen is opened
+    if (location) {
+      setMapRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    }
+  }, [
+    fromLat,
+    fromLon,
+    toLat,
+    toLon,
+    startStation?.commonName,
+    endStation?.commonName,
+    location,
+  ]);
 
   return (
     <View style={styles.container}>
-      {initialRegion && (
-        <MapView
-          style={styles.map}
-          initialRegion={initialRegion}
-          showsUserLocation={true}
-        >
-          <Polyline
-            coordinates={walkingRoute1}
-            strokeWidth={3}
-            strokeColor="red"
-            lineDashPattern={[5, 10]}
-          />
-          <Polyline
-            coordinates={cyclingRoute}
-            strokeWidth={5}
-            strokeColor="blue"
-          />
-          <Polyline
-            coordinates={walkingRoute2}
-            strokeWidth={3}
-            strokeColor="red"
-            lineDashPattern={[5, 10]}
-          />
+      <MapView
+        style={styles.map}
+        region={mapRegion}
+        initialRegion={{
+          latitude: location?.latitude || 51.514156,
+          longitude: location?.longitude || -0.12070277,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }}
+        showsUserLocation={true}
+      >
+        <Polyline
+          coordinates={walkingRoute1}
+          strokeWidth={3}
+          strokeColor="red"
+          lineDashPattern={[5, 10]}
+        />
+        <Polyline
+          coordinates={cyclingRoute}
+          strokeWidth={5}
+          strokeColor="blue"
+        />
+        <Polyline
+          coordinates={walkingRoute2}
+          strokeWidth={3}
+          strokeColor="red"
+          lineDashPattern={[5, 10]}
+        />
 
-          {/* Start Marker */}
-          {startStation && (
-            <Marker coordinate={{ latitude: fromLat, longitude: fromLon }}>
-              <View style={styles.markerContainer}>
-                <View style={styles.banner}>
-                  <Text style={styles.bannerText}>Start</Text>
-                </View>
-                <View style={styles.pointer} />
+        {/* Start Marker */}
+        {startStation && (
+          <Marker coordinate={{ latitude: fromLat, longitude: fromLon }}>
+            <View style={styles.markerContainer}>
+              <View style={styles.banner}>
+                <Text style={styles.bannerText}>Start</Text>
               </View>
-            </Marker>
-          )}
+              <View style={styles.pointer} />
+            </View>
+          </Marker>
+        )}
 
-          {/* End Marker */}
-          {endStation && (
-            <Marker coordinate={{ latitude: toLat, longitude: toLon }}>
-              <View style={styles.markerContainer}>
-                <View style={styles.banner}>
-                  <Text style={styles.bannerText}>End</Text>
-                </View>
-                <View style={styles.pointer} />
+        {/* End Marker */}
+        {endStation && (
+          <Marker coordinate={{ latitude: toLat, longitude: toLon }}>
+            <View style={styles.markerContainer}>
+              <View style={styles.banner}>
+                <Text style={styles.bannerText}>End</Text>
               </View>
-            </Marker>
-          )}
-        </MapView>
-      )}
+              <View style={styles.pointer} />
+            </View>
+          </Marker>
+        )}
+
+      </MapView>
     </View>
   );
 }
@@ -274,7 +312,7 @@ const styles = StyleSheet.create({
   },
   markerContainer: {
     alignItems: 'center',
-    transform: [{ translateY: -25 }]
+    transform: [{ translateY: -25}]
   },
   banner: {
     backgroundColor: '#ED0100',

@@ -475,15 +475,17 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   closeButton: {
-    backgroundColor: "gray",
+    backgroundColor: "white",
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: 10
+    marginTop: 30,
+    borderBlockColor: 'black',
+    borderWidth: 2
   },
   closeButtonText: {
-    color: "white",
-    fontWeight: "bold",
+    color: "black",
+    fontWeight: "600",
     fontSize: 16,
     textAlign: "center"
   },

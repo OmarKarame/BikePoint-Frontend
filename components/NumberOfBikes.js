@@ -1,8 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Modal, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { SvgXml } from 'react-native-svg';
 import LocationContext from '../components/LocationContext';
 import bicycleIcon from '../assets/images/bicycle-icon.png';
+import svgExpandArrow from '../assets/svgs/svgExpandArrow';
 
 export default function NumberOfBikes() {
   const {
@@ -28,8 +30,17 @@ export default function NumberOfBikes() {
         onPress={togglePicker}
       >
         <View style={styles.content}>
+          <Text style={styles.leftText}>Bikes</Text>
           <Image source={bicycleIcon} style={styles.image} />
-          <Text style={styles.text}>{numBikes}</Text>
+          <View style={styles.infoSection}>
+            <Text style={styles.text}>{numBikes}</Text>
+            <SvgXml
+            xml={svgExpandArrow}å
+            width="20"
+            height="20"
+            style={[{ transform: [{ translateX: -10 }] }]}
+          />
+          </View>
         </View>
       </TouchableOpacity>
       <Modal
@@ -64,27 +75,29 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(195, 222, 231, 0.4)',
-    height: '100%',
-    borderRadius: 10,
-    maxWidth: '24%',
+    backgroundColor: 'white',
+    height: 40,
+    borderRadius: 30,
+    maxWidth: '49.5%',
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 30,
   },
   content: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    width: '80%',
-    height: '95%'
+    width: '100%',
+    height: '100%'
   },
   pressed: {
     backgroundColor: 'rgba(195, 222, 231, 1)',
   },
   image: {
-    height: 60,
-    width: 60,
-    marginTop: 7,
-    transform: [{ translateX: -3}]
+    height: 25,
+    width: 25,
+    transform: [{ translateX: -10}]
   },
   contentInfo: {
     display: 'flex',
@@ -141,5 +154,27 @@ const styles = StyleSheet.create({
   },
   cancelButton:{
     fontSize: 12
+  },
+  text: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: '500',
+    textAlign: 'center',
+    marginRight: 14
+  },
+  leftText: {
+    marginLeft: 8,
+    fontWeight: '700',
+    width: '25%'
+  },
+  infoSection: {
+    width: '40%',
+    height: '100%',
+    // backgroundColor: 'black',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transform: [{ translateX: -6 }]
   }
 })

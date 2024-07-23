@@ -10,7 +10,7 @@ import briefcase from '../assets/images/briefcase-icon.png'
 export default function AdditionalContentButtons() {
   return (
     <View style={styles.container}>
-      <DepartureTime />
+      {/* <DepartureTime /> */}
       <TakeMe
         icon={houseIcon}
         location={'Home'}
@@ -21,7 +21,7 @@ export default function AdditionalContentButtons() {
         isWork={true}
       />
       {/* <ArrivalTime isLocationSet={false}/> */}
-      <NumberOfBikes />
+      {/* <NumberOfBikes /> */}
     </View>
   )
 }

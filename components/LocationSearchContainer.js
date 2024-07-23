@@ -11,6 +11,8 @@ import svgWhiteMagnifyingGlass from '../assets/svgs/svgWhiteMagnifyingGlass';
 import currentLocationIcon from '../assets/images/current-location.png';
 import locationIcon from '../assets/images/location-icon.png';
 import svgWhiteBackButton from '../assets/svgs/svgWhiteBackButton';
+import NumberOfBikes from './NumberOfBikes';
+import DepartureTime from './DepartureTime';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -131,6 +133,7 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
   const dynamicStyles = StyleSheet.create({
     container: {
       width: screenWidth,
+      height: screenHeight * 28 / 100,
       paddingTop: backgroundColor ? screenHeight * 12 / 100 : 0,
       alignItems: 'center',
       borderRadius: 20,
@@ -151,6 +154,13 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
       width: '100%',
       borderRadius: 20,
     },
+    journeyInfoContainer: {
+      width: '90%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 3
+    }
   });
 
   return (
@@ -197,6 +207,10 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
         onFocus={handleFocusTo}
         onBlur={handleBlurTo}
       />
+      <View style={dynamicStyles.journeyInfoContainer}>
+        <DepartureTime />
+        <NumberOfBikes />
+      </View>
     </View>
   );
 }

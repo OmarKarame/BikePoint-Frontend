@@ -16,7 +16,7 @@ const screenWidth = Dimensions.get('window').width;
 export default function BikeInfoContainer({ location, startStation, endStation }) {
   const bottomSheetRef = useRef(null);
 
-  const snapPoints = useMemo(() => ['20%', '90%'], []);
+  const snapPoints = useMemo(() => ['21%', '90%'], []);
 
   useEffect(() => {
     bottomSheetRef.current?.expand();
@@ -67,7 +67,7 @@ export default function BikeInfoContainer({ location, startStation, endStation }
                 <ExtraInfoCard
                   isRed={false}
                   displayImage={svgRedTimer}
-                  title={'EST. Time Till Arrival'}
+                  title={'Arrival Time'}
                   info={'0 Min'}
                 />
               </View>

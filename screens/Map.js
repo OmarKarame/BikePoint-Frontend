@@ -156,8 +156,8 @@ export default function Map() {
             givenFromLocation={fromLocation}
             givenToLocation={toLocation}
           /> */}
-          <Text style={styles.text}>From: {fromLocation}</Text>
-          <Text style={styles.text}>To: {toLocation}</Text>
+          <Text style={styles.fromText}>O {fromLocation}</Text>
+          <Text style={styles.toText}>O {toLocation}</Text>
         </View>
         <View style={styles.mapDisplay}>
           <BikeInfoContainer
@@ -173,9 +173,9 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor: 'black',
-    },
+    flex: 1,
+    backgroundColor: 'black',
+  },
   innerShadow: {
     position: 'absolute',
     left: 0,
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   header: {
     zIndex: 2,
-    height: 170,
+    height: 150,
     width: screenWidth,
     backgroundColor: '#ED0000',
     display: 'flex',
@@ -200,9 +200,16 @@ const styles = StyleSheet.create({
   mapDisplay: {
     flex: 1,
   },
-  text: {
-    paddingLeft: 20,
-    paddingTop: 20,
+  fromText: {
+    marginLeft: 20,
+    marginTop: 50,
+    fontWeight: '700',
+    color: 'white',
+    fontSize: 16
+  },
+  toText: {
+    marginLeft: 20,
+    marginTop: 15,
     fontWeight: '700',
     color: 'white',
     fontSize: 16

@@ -12,15 +12,15 @@ export default function GetMeSomewhereButton() {
 
   const navigation = useNavigation();
 
-  const handlePressOut = () => {
-    setIsPressed(false);
-    Vibration.vibrate([0, 50, 100, 50]);  // iMessage-like vibration pattern
-  };
+  // const handlePressOut = () => {
+  //   setIsPressed(false);
+  //   Vibration.vibrate([0, 50, 100, 50]);  // iMessage-like vibration pattern
+  // };
 
   return (
     <TouchableOpacity
-      onPressIn={() => setIsPressed(true)}
-      onPressOut={handlePressOut}
+      // onPressIn={() => setIsPressed(true)}
+      // onPressOut={handlePressOut}
       activeOpacity={1}  // Maintain the same opacity level when pressed
       onPress={() => navigation.navigate('Search', {})}
       style={[

@@ -242,60 +242,56 @@ export default function MapDisplay({ location = null }) {
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        region={mapRegion}
-        initialRegion={{
-          latitude: location?.latitude || 51.514156,
-          longitude: location?.longitude || -0.12070277,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        showsUserLocation={true}
-      >
-        <Polyline
-          coordinates={walkingRoute1}
-          strokeWidth={3}
-          strokeColor="red"
-          lineDashPattern={[5, 10]}
-        />
-        <Polyline
-          coordinates={cyclingRoute}
-          strokeWidth={5}
-          strokeColor="blue"
-        />
-        <Polyline
-          coordinates={walkingRoute2}
-          strokeWidth={3}
-          strokeColor="red"
-          lineDashPattern={[5, 10]}
-        />
+      {mapRegion && (
+        <MapView
+          style={styles.map}
+          initialRegion={mapRegion}
+          showsUserLocation={true}
+          onRegionChangeComplete={(region) => setMapRegion(region)}
+        >
+          <Polyline
+            coordinates={cyclingRoute}
+            strokeWidth={5}
+            strokeColor="black"
+          />
+          <Polyline
+            coordinates={walkingRoute2}
+            strokeWidth={3}
+            strokeColor="red"
+            lineDashPattern={[5, 10]}
+          />
+          <Polyline
+            coordinates={walkingRoute1}
+            strokeWidth={3}
+            strokeColor="red"
+            lineDashPattern={[5, 10]}
+          />
 
-        {/* Start Marker */}
-        {startStation && (
-          <Marker coordinate={{ latitude: fromLat, longitude: fromLon }}>
-            <View style={styles.markerContainer}>
-              <View style={styles.banner}>
-                <Text style={styles.bannerText}>Start</Text>
+          {/* Start Marker */}
+          {startStation && (
+            <Marker coordinate={{ latitude: fromLat, longitude: fromLon }}>
+              <View style={styles.markerContainer}>
+                <View style={styles.banner}>
+                  <Text style={styles.bannerText}>Start</Text>
+                </View>
+                <View style={styles.pointer} />
               </View>
-              <View style={styles.pointer} />
-            </View>
-          </Marker>
-        )}
+            </Marker>
+          )}
 
-        {/* End Marker */}
-        {endStation && (
-          <Marker coordinate={{ latitude: toLat, longitude: toLon }}>
-            <View style={styles.markerContainer}>
-              <View style={styles.banner}>
-                <Text style={styles.bannerText}>End</Text>
+          {/* End Marker */}
+          {endStation && (
+            <Marker coordinate={{ latitude: toLat, longitude: toLon }}>
+              <View style={styles.markerContainer}>
+                <View style={styles.banner}>
+                  <Text style={styles.bannerText}>End</Text>
+                </View>
+                <View style={styles.pointer} />
               </View>
-              <View style={styles.pointer} />
-            </View>
-          </Marker>
-        )}
-
-      </MapView>
+            </Marker>
+          )}
+        </MapView>
+      )}
     </View>
   );
 }

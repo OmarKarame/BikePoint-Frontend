@@ -8,7 +8,7 @@ import bikeSpotLogo from '../assets/images/bikespot-logo.png';
 import GetMeSomewhereButton from '../components/GetMeSomewhereButton';
 import svgHomeScreenHeaderDesign from '../assets/svgs/svgHomeScreenHeaderDesign';
 import { SvgXml } from 'react-native-svg';
-import bikeImage from '../assets/images/regular-bicycle-png.jpeg';
+import bikeImage from '../assets/images/santander-bike-home.png';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: -5,
     transform: [{ translateX: -screenWidth * 22 / 100 }],
   },
   mainBikeImage: {

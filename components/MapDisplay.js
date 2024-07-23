@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
-import { StyleSheet, View, Dimensions, Alert } from "react-native";
-import MapView, { Polyline } from "react-native-maps";
+import { StyleSheet, View, Dimensions, Alert, Text } from "react-native";
+import MapView, { Polyline, Marker } from "react-native-maps";
 import polyline from "@mapbox/polyline";
 import { REACT_APP_MAPBOX_API_KEY } from "@env";
 import { useNavigation } from '@react-navigation/native';
@@ -9,7 +9,7 @@ import LocationContext from "../components/LocationContext";
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-export default function MapDisplay({ location }) {
+export default function MapDisplay({ location = null }) {
   const {
     fromLocation,
     setFromLocation,
@@ -270,6 +270,31 @@ export default function MapDisplay({ location }) {
           strokeColor="red"
           lineDashPattern={[5, 10]}
         />
+
+        {/* Start Marker */}
+        {startStation && (
+          <Marker coordinate={{ latitude: fromLat, longitude: fromLon }}>
+            <View style={styles.markerContainer}>
+              <View style={styles.banner}>
+                <Text style={styles.bannerText}>Start</Text>
+              </View>
+              <View style={styles.pointer} />
+            </View>
+          </Marker>
+        )}
+
+        {/* End Marker */}
+        {endStation && (
+          <Marker coordinate={{ latitude: toLat, longitude: toLon }}>
+            <View style={styles.markerContainer}>
+              <View style={styles.banner}>
+                <Text style={styles.bannerText}>End</Text>
+              </View>
+              <View style={styles.pointer} />
+            </View>
+          </Marker>
+        )}
+
       </MapView>
     </View>
   );
@@ -277,12 +302,37 @@ export default function MapDisplay({ location }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: screenHeight * 84/100,
+    height: screenHeight * 84 / 100,
     transform: [{ translateY: -15 }],
     width: screenWidth,
     ...StyleSheet.absoluteFillObject,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  markerContainer: {
+    alignItems: 'center',
+    transform: [{ translateY: -25}]
+  },
+  banner: {
+    backgroundColor: '#ED0100',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    elevation: 5,
+  },
+  bannerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  pointer: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#ED0100',
   },
 });

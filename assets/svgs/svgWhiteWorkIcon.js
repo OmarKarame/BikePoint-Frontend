@@ -1,0 +1,13 @@
+const svgWhiteWorkIcon = `
+<svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="42" height="42" fill="url(#pattern0_631_97)"/>
+<defs>
+<pattern id="pattern0_631_97" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_631_97" transform="scale(0.0111111)"/>
+</pattern>
+<image id="image0_631_97" width="90" height="90" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJklEQVR4nO2cT6gVVRzHfwkRGkGkopvIpEB0oaaCRQuhjbs2tYjAhaILUbe2c52CC7MsECtoW5v+ESUtKtqlOwuF4un1qY97vt+Zd/2D1jtyuPfBW8zMm9s9d845M78P/FZzZub3PvfMmfNvnoiiKIqiKIqiKEpX6fV6qwB8yCE2sgCAszMzMysldQB8HIHQynA5SspYa1eQvBdaZI2463KVVFHRDZJI03FOUse9aAB84F48oYUWhAFwphUvQ0VRFEVRlNbPY9jWzIekMBhh6vMhCQ2vbdLzISq6QTrWdJyTUEQ+j2FbOR8SgRA7jZDYCC2EKjq8rE7U6LaWD0ZsIqii4xSnNXqEio5UBLVGxyku+aYj9ZDYCC2EKjq8LK3RDC9Smw7GERIboYWw66JjKg9goaistfYJktdJfmaM2Zdl2W4AG9zis8RGyqKTQkU3hIpuiEREP5TUSUE0ySOSOqG7YVw+Liz3N+R5vonkCZIXR70Qt0HoLsmfSe6VGIhApC0LALdmZ2efLsvdGPMCgK9dr2SZa30S/Out0DJZEVmWHavIe++YmzT/AfA9yXdc/7tZyxGLBnDTWvtUUc7GmNcn3D/4pbX2SRXN4eNeJMLJB3DNw495WkWT1hjzZskTeNTTE/OI5MbGZJclErr83NzcM0XHAfzqsYk6IR0XzaJjrgcC4D+Poi9Kl0UD+Kvk2EseJbu4IR0X/XvJsV2eRc9Lx0VfLTrW7/ef9yz6b+myaJKDomNudAdgzpdoN4CRpvBcQ6xHCS9O+7OQqpFnZ0STPFwiegOABx6ufy/LstUqmvy0YqZu4s/3ANzv9/tbOi8awJmSJ/DwtJ+aqRBBE2FL4nxRvgAOeLzHu50XDeCbkoqx0S1teZBsSD4XXLSv8uOypA29UzZZT/K9CdvnRwDekiaJVTSH3a9XK8p97vtF21nRJL8qK5dl2Ws1lrCKavOC29EkTROzaAALAN4oKzv6nyPjij4rIYhZNIdibg8Gg/VFZd0eO5KXxhD9R7Bvw2MXzaHsj8rK53m+FsCfNWrytbIfrBEmeKHYBkU/NMZsLTsHwJ4aovdISFIQzWH8VHHOzho57pSQxCwaw2WrH0m+XbU9QEX/D0aC/3X95CzLXq55Tp2Vl10Skghr9CUA28c851SNHN+XkMQm2o65gwjAwTor464MgP0SithE12U0Mvx23Dzdpsiqof3USEk0gGdJHiJ5edJ8AVwheTzP8zVN5J6E6DzPNwP4wq2K+Mp3ifD77truHtJVBoPBevdp26gX4lVwgXB3jwvz8/PrpEsAeMVt3Z224ILoAdgmXQDDle47ASQv1u7b7msCaTsAfggleYns76TNANgWWvKS2CFthfVGeU3FSWkrAH6LQPBi/CJtBcCtCAQvRk/aCvzsq/MSbjDzGKr1/mSkTCwbAAAAAElFTkSuQmCC"/>
+</defs>
+</svg>
+`
+
+export default svgWhiteWorkIcon

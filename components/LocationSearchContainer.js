@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions, Alert } from 'react-native';
+import { StyleSheet, View, Dimensions, Alert, Vibration } from 'react-native';
 import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -117,6 +117,7 @@ export default function LocationSearchContainer({ backgroundColor, addRecent, on
       setSearchFlag(!searchFlag)
       setSecondSearchFlag(secondSearchFlag)
       addRecent(toLocation);
+      Vibration.vibrate([0, 50, 100, 50]);
       navigation.navigate('Map', {});
     } else {
       Alert.alert(

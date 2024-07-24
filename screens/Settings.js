@@ -99,7 +99,7 @@ export default function Settings() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['white', '#F5F5F5', '#E1E1E1']}
+        colors={["rgba(255, 255, 255, 0)", "#F5F5F5", "#E1E1E1"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         locations={[0.0, 0.75, 1.0]}
@@ -326,5 +326,75 @@ const styles = StyleSheet.create({
   arrowIcon: {
     position: "absolute",
     right: -15, // negative otherwise it goes within the buttons, theres border for ionicons
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  modalContent: {
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderRadius: 15,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    minWidth: screenWidth * 0.8,
+    maxWidth: screenWidth * 0.8
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  modalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ED0000",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+    width: "100%"
+  },
+  modalButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  modalIcon: {
+    marginLeft: 10
+  },
+  closeButton: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 30,
+    borderBlockColor: 'black',
+    borderWidth: 2
+  },
+  closeButtonText: {
+    color: "black",
+    fontWeight: "600",
+    fontSize: 16,
+    textAlign: "center"
   },
 });

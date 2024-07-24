@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     maxWidth: '49.5%',
     borderColor: 'grey',
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
   },
   content: {
     display: 'flex',

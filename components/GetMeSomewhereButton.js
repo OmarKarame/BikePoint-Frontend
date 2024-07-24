@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     height: 50,
     width: screenWidth * 90 / 100,
-    borderRadius: 30,
+    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

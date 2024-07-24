@@ -1,17 +1,22 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import { SvgXml } from 'react-native-svg';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState, useEffect } from 'react'
 import clockIcon from '../assets/images/clock-icon.png'
 import svgExpandArrow from '../assets/svgs/svgExpandArrow';
+import LocationContext from '../components/LocationContext';
 
 export default function DepartureTime() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isPickerVisible, setPickerVisibility] = useState(false);
-  const [time, setTime] = useState(new Date());
   const [isPressed, setIsPressed] = useState(false);
   const [isNow, setIsNow] = useState(true);
+
+  const {
+    time,
+    setTime
+  } = useContext(LocationContext);
 
   const showPicker = () => {
     setPickerVisibility(true);

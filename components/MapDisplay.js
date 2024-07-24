@@ -11,15 +11,7 @@ const screenWidth = Dimensions.get("window").width;
 
 export default function MapDisplay({ location = null }) {
   const {
-    fromLocation,
-    setFromLocation,
-    toLocation,
-    setToLocation,
-    setArrivalTime,
-    setFromLat,
-    setFromLon,
-    setToLat,
-    setToLon,
+    setTimeToDestination,
     fromLat,
     fromLon,
     toLat,
@@ -193,9 +185,10 @@ export default function MapDisplay({ location = null }) {
 
     const totalDuration =
       walkingRoute1.duration + cyclingRoute.duration + walkingRoute2.duration;
-    const arrivalTime = new Date();
-    arrivalTime.setSeconds(arrivalTime.getSeconds() + totalDuration);
-    setArrivalTime(arrivalTime);
+    setTimeToDestination(totalDuration)
+    // const arrivalTime = new Date();
+    // arrivalTime.setSeconds(arrivalTime.getSeconds() + totalDuration);
+    // setArrivalTime(arrivalTime);
 
     // Update previous values
     prevFromLat.current = fromLat;

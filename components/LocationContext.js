@@ -17,7 +17,8 @@ export const LocationProvider = ({ children }) => {
   const [fromLon, setFromLon] = useState(null);
   const [toLat, setToLat] = useState(null);
   const [toLon, setToLon] = useState(null);
-  const [arrivalTime, setArrivalTime] = useState(null);
+  const [timeToDestination, setTimeToDestination] = useState(null);
+  const [time, setTime] = useState(new Date());
   const [searchFlag, setSearchFlag] = useState(false);
   const [secondSearchFlag, setSecondSearchFlag] = useState(false);
   const [startStation, setStartStation] = useState([]);
@@ -85,8 +86,8 @@ export const LocationProvider = ({ children }) => {
         setToLat,
         toLon,
         setToLon,
-        arrivalTime,
-        setArrivalTime,
+        timeToDestination,
+        setTimeToDestination,
         searchFlag,
         setSearchFlag,
         secondSearchFlag,
@@ -101,6 +102,8 @@ export const LocationProvider = ({ children }) => {
         setWalkingRoute2,
         cyclingRoute,
         setCyclingRoute,
+        time,
+        setTime
       }}
     >
       {children}

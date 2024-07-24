@@ -1,73 +1,98 @@
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
-import { SvgXml } from 'react-native-svg';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useContext } from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import React from 'react';
+import Svg, { Circle } from 'react-native-svg';
 
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
-const screenHeight = Dimensions.get('window').height
-const screenWidth = Dimensions.get('window').width
+export default function ExtraInfoCard({ header, title, stationBikes, stationDocks }) {
+  const bikePercentage = (stationBikes / stationDocks) * 100;
+  const emptySpaces = stationDocks - stationBikes;
 
-export default function ExtraInfoCard({ isRed, displayImage, title, info}) {
+  const radius = 50;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (circumference * bikePercentage) / 100;
+
   return (
     <View style={styles.container}>
-      <View style={styles.iconBackground}>
-        {isRed ? <LinearGradient
-          colors={['#EC0000', '#500d1f']}
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          locations={[0.4, 0.95]}
-        /> : <LinearGradient
-          colors={['white', 'rgba(195, 222, 231, 1)']}
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          locations={[0.4, 0.95]}
-        />}
-        <SvgXml
-          xml={displayImage}
-          width="80"
-          height="80"
-        />
+      <View style={styles.header}>
+        <Text style={styles.stationHeader}>{header} Station:</Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.info}>{info}</Text>
+      <View style={styles.circleContainer}>
+        <Svg height="150" width="150" viewBox="0 0 120 120">
+          <Circle
+            cx="60"
+            cy="60"
+            r={radius}
+            stroke="white"
+            strokeWidth="14"
+            fill="none"
+          />
+          <Circle
+            cx="60"
+            cy="60"
+            r={radius}
+            stroke="#ED0100"
+            strokeWidth="14"
+            fill="none"
+            strokeDasharray={`${circumference} ${circumference}`}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="butt"
+            transform="rotate(-90 60 60)"
+          />
+        </Svg>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoBikes}>{stationBikes} BIKES</Text>
+          <Text style={styles.infoSpaces}>{emptySpaces} SPACES</Text>
+        </View>
+      </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: screenHeight * 23/100,
-    width: screenWidth * 40/100,
+    height: screenHeight * 23 / 100,
+    width: screenWidth * 90 / 100,
     alignItems: 'center',
-    justifyContent: 'space-around'
+    flexDirection: 'row',
+    padding: 10,
   },
-  iconBackground: {
-    height: 120,
-    width: 120,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 100,
-    overflow: 'hidden',
-  },
-  gradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+  header: {
+    flexDirection: 'column',
+    width: '55%',
   },
   title: {
     color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-    width: '80%',
-    marginTop: 5,
-    },
-  info: {
+    fontSize: 17,
+    width: '100%',
+    fontWeight: '500',
+    marginBottom: 5,
+  },
+  stationHeader: {
     color: 'white',
     fontSize: 24,
-    fontWeight: '700',
-  }
-})
+    width: '90%',
+    fontWeight: '500',
+  },
+  circleContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  infoContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+  },
+  infoBikes: {
+    color: '#ED0100',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  infoSpaces: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});

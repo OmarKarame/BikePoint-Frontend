@@ -1,20 +1,22 @@
-import React, { useRef, useEffect, useMemo } from 'react';
-import { View, Dimensions, StyleSheet } from 'react-native';
+import React, { useRef, useEffect, useMemo, useContext } from 'react';
+import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MapDisplay from './MapDisplay';
 import ExtraInfoCard from '../components/ExtraInfoCard';
-import svgWhiteClock from '../assets/svgs/svgWhiteClock';
-import svgRedTimer from '../assets/svgs/svgRedTimer';
-import svgRedDockedBicycle from '../assets/svgs/svgRedDockedBicycle';
-import svgWhiteBicycle from '../assets/svgs/svgWhiteBicycle';
 import CustomBackground from './CustomBackground';
+import LocationContext from '../components/LocationContext';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 export default function BikeInfoContainer({ location, startStation, endStation }) {
   const bottomSheetRef = useRef(null);
+
+  const {
+    timeToDestination,
+    time,
+  } = useContext(LocationContext);
 
   const snapPoints = useMemo(() => ['21%', '90%'], []);
 
@@ -43,21 +45,32 @@ export default function BikeInfoContainer({ location, startStation, endStation }
         >
           <View style={styles.infoContainer}>
             <View style={styles.infoSection}>
+              <View style={styles.timeInfo}>
+                <View style={styles.departureTime}>
+                  <Text style={styles.timeTextLeft}>Leave:</Text>
+                  <Text style={styles.timeTextLeft}>{`${time.toLocaleDateString('en-US',{ weekday: 'short' }).split(' ')[0]}, ${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`}</Text>
+                </View>
+                <View style={styles.arrivalTime}>
+                  <Text style={styles.timeTextRight}>{Math.round(timeToDestination / 60)} Min</Text>
+                </View>
+              </View>
               <View style={styles.bikeInfo}>
                 <ExtraInfoCard
-                  isRed={true}
-                  displayImage={svgWhiteBicycle}
+                  header={'Start'}
                   title={startStation.commonName}
+                  stationBikes={startStation.nbBikes}
+                  stationDocks={startStation.nbDocks}
                   info={`${startStation.nbBikes}/${startStation.nbDocks}`}
                 />
                 <ExtraInfoCard
-                  isRed={false}
-                  displayImage={svgRedDockedBicycle}
+                  header={'End'}
                   title={endStation.commonName}
+                  stationBikes={endStation.nbBikes}
+                  stationDocks={endStation.nbDocks}
                   info={`${endStation.nbBikes}/${endStation.nbDocks}`}
                 />
               </View>
-              <View style={styles.timeInfo}>
+              {/* <View style={styles.timeInfo}>
                 <ExtraInfoCard
                   isRed={true}
                   displayImage={svgWhiteClock}
@@ -70,7 +83,7 @@ export default function BikeInfoContainer({ location, startStation, endStation }
                   title={'Arrival Time'}
                   info={'0 Min'}
                 />
-              </View>
+              </View> */}
             </View>
           </View>
         </BottomSheet>
@@ -90,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoSection: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-around',
     marginTop: 80,
   },
@@ -100,15 +113,30 @@ const styles = StyleSheet.create({
   },
   bikeInfo: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
+    transform: [{translateY: -20}]
   },
   timeInfo: {
+    width: '90%',
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: -60,
+    marginBottom: 60,
   },
+  timeTextLeft: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+    transform: [{translateY: -5}]
+  },
+  timeTextRight: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '600',
+    transform: [{translateY: -5}]
+  }
 });

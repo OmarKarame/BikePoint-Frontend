@@ -1,11 +1,9 @@
-package com.bikespotfrontend;
+package com.bikespot.app;
 
 import androidx.annotation.NonNull;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -15,7 +13,7 @@ public class InAppReviewPackage implements ReactPackage {
     @NonNull
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactApplicationContext) {
-        return Arrays.<NativeModule>asList(new InAppReviewManager(reactApplicationContext));
+        return Arrays.<NativeModule>asList(new InAppReviewModule(reactApplicationContext));
     }
 
     @NonNull

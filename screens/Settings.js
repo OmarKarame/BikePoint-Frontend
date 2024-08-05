@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from 'expo-blur';
 import * as Linking from 'expo-linking';
+import { AppReviewManager } from '../components/utils/AppReviewManager';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -86,8 +87,13 @@ export default function Settings() {
   };
 
   const handleRateAppPress = () => {
-    alert("Rate the app clicked!");
-    //TODO
+    AppReviewManager.rate((response) => {
+        if (response.error) {
+          Alert.alert('Error', 'There was an error while trying to open the review dialog.');
+        } else {
+          Alert.alert('Thank you!', 'Thank you for your feedback.');
+        }
+      });
   };
 
   // Methods used within contact modal

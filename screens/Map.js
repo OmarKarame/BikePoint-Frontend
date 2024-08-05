@@ -28,7 +28,7 @@ export default function Map() {
 
   async function getClosestStartStation(lat, lon) {
     try {
-      const response = await fetch(`http://10.80.105.99:3000/getStartLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
+      const response = await fetch(`http://192.168.1.213:3000/getStartLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -42,7 +42,7 @@ export default function Map() {
 
   async function getClosestEndStation(lat, lon) {
     try {
-      const response = await fetch(`http://10.80.105.99:3000/getEndLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
+      const response = await fetch(`http://192.168.1.213:3000/getEndLocation?lat=${lat}&lon=${lon}&numBikes=${numBikes}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

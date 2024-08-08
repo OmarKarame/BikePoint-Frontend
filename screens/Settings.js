@@ -15,6 +15,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from 'expo-blur';
 import * as Linking from 'expo-linking';
 
+import SettingsButton from "../components/SettingsButton";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -116,119 +118,36 @@ export default function Settings() {
 
       {/* Buttons */}
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleNotificationsPress}
-          activeOpacity={0.5}
-        >
-          <View style={styles.buttonTextContainer}>
-            <Ionicons name="notifications-outline" size={24} color="black" />
-            <View style={styles.textContainer}>
-              <Text style={styles.headerText}>Notifications</Text>
-              <Text style={styles.subheaderText}>
-                Select the kind of notifications you get about your activities
-                and reminders.
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward-outline"
-              size={22}
-              color="black"
-              style={styles.arrowIcon}
+        <SettingsButton
+            iconName="notifications-outline"
+            title="Notifications"
+            description="Select the kind of notifications you get about your activities and reminders."
+            onPress={handleNotificationsPress}
             />
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleFaqPress}
-          activeOpacity={0.5}
-        >
-          <View style={styles.buttonTextContainer}>
-            <Ionicons name="help-circle-outline" size={24} color="black" />
-            <View style={styles.textContainer}>
-              <Text style={styles.headerText}>FAQs</Text>
-              <Text style={styles.subheaderText}>
-                Your go-to source for troubleshooting and tips on using the app
-                and its features.
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward-outline"
-              size={22}
-              color="black"
-              style={styles.arrowIcon}
+            <SettingsButton
+            iconName="help-circle-outline"
+            title="FAQs"
+            description="Your go-to source for troubleshooting and tips on using the app and its features."
+            onPress={handleFaqPress}
             />
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleToSPress}
-          activeOpacity={0.5}
-        >
-          <View style={styles.buttonTextContainer}>
-            <Ionicons name="document-text-outline" size={24} color="black" />
-            <View style={styles.textContainer}>
-              <Text style={styles.headerText}>Terms of Service</Text>
-              <Text style={styles.subheaderText}>
-                Understand the guidelines and policies for using our app and
-                services.
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward-outline"
-              size={22}
-              color="black"
-              style={styles.arrowIcon}
+            <SettingsButton
+            iconName="document-text-outline"
+            title="Terms of Service"
+            description="Understand the guidelines and policies for using our app and services."
+            onPress={handleToSPress}
             />
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleContactPress}
-          activeOpacity={0.5}
-        >
-          <View style={styles.buttonTextContainer}>
-            <Ionicons name="people-circle-outline" size={24} color="black" />
-            <View style={styles.textContainer}>
-              <Text style={styles.headerText}>Contact Us</Text>
-              <Text style={styles.subheaderText}>
-                We're here to assist you with any issues or questions you may
-                have.
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward-outline"
-              size={22}
-              color="black"
-              style={styles.arrowIcon}
+            <SettingsButton
+            iconName="people-circle-outline"
+            title="Contact Us"
+            description="We're here to assist you with any issues or questions you may have."
+            onPress={handleContactPress}
             />
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleRateAppPress}
-          activeOpacity={0.5}
-        >
-          <View style={styles.buttonTextContainer}>
-            <Ionicons name="star-outline" size={24} color="black" />
-            <View style={styles.textContainer}>
-              <Text style={styles.headerText}>Rate the app</Text>
-              <Text style={styles.subheaderText}>
-                Love our app? Let us know by rating us!
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward-outline"
-              size={22}
-              color="black"
-              style={styles.arrowIcon}
+            <SettingsButton
+            iconName="star-outline"
+            title="Rate the app"
+            description="Love our app? Let us know by rating us!"
+            onPress={handleRateAppPress}
             />
-          </View>
-        </TouchableOpacity>
 
         {/* User Metrics */}
         <View style={styles.bottomSection}>
@@ -331,41 +250,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
   },
-  headerText: {
-    color: "black",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  subheaderText: {
-    color: "#616161",
-    fontSize: 14,
-    marginTop: 2,
-  },
   scrollViewContent: {
     alignItems: "center",
     paddingVertical: 10,
-  },
-  button: {
-    backgroundColor: "transparent",
-    width: "100%",
-    paddingVertical: 7,
-    paddingHorizontal: 20,
-    marginVertical: 5,
-  },
-  buttonTextContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-    paddingRight: 10,
-  },
-  textContainer: {
-    flex: 1,
-    paddingLeft: 10,
-    paddingRight: 7,
-  },
-  arrowIcon: {
-    position: "absolute",
-    right: -15, // negative otherwise it goes within the buttons, theres border for ionicons
   },
   bottomSection: {
     flexDirection: "column",

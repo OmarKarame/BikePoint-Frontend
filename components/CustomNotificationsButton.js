@@ -64,9 +64,10 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 12,
     color: 'black',
-    fontWeight: '500',
+    fontWeight: '400',
     textAlign: 'center',
     marginTop: -3,
+    letterSpacing: -0.1
   },
   icon: {
     marginTop: 4,

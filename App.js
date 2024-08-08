@@ -13,6 +13,7 @@ import Statistics from './screens/Statistics';
 import Map from './screens/Map';
 import Settings from './screens/Settings';
 import Search from './screens/Search';
+import Stations from './screens/Stations';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
@@ -99,6 +100,7 @@ export default function App() {
               <Stack.Screen name="Settings" component={Settings} />
               <Stack.Screen name="Statistics" component={Statistics} />
               <Stack.Screen name="Search" component={Search} />
+              <Stack.Screen name="Stations" component={Stations} />
             </Stack.Navigator>
             <NavBarWrapper />
           </View>

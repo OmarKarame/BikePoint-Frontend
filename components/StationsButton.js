@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import { SvgXml } from 'react-native-svg'
+import { useNavigation } from '@react-navigation/native';
 
 export default function StationsButton({ icon, text }) {
   const [isPressed, setIsPressed] = useState(false);
+  const navigation = useNavigation();
 
   const handlePressIn = () => {
     setIsPressed(true);
+    navigation.navigate('Stations');
   }
   const handlePressOut = () => setIsPressed(false);
 
@@ -63,9 +66,10 @@ const styles = StyleSheet.create({
     width: '70%',
     fontSize: 12,
     color: 'black',
-    fontWeight: '500',
+    fontWeight: '400',
     textAlign: 'center',
     marginTop: -8,
+    letterSpacing: -0.1
   },
   icon: {
     marginTop: -2,

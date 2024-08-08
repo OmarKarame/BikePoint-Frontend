@@ -5,15 +5,19 @@ import NavBar from './NavBar';
 export default function NavBarWrapper() {
   const navigation = useNavigation();
   const screenName = useNavigationState((state) => state?.routes[state?.index]?.name ?? 'Home');
-  const [isSearchScreen, setIsSearchScreen] = useState(screenName !== 'Search');
+  const [displayNavBar, setDisplayNavBar] = useState(false)
 
   useEffect(() => {
-    setIsSearchScreen(screenName !== 'Search');
+    if (screenName == 'Search' || screenName == 'Stations') {
+      setDisplayNavBar(false)
+    } else {
+      setDisplayNavBar(true)
+    }
   }, [screenName])
 
   return (
     <View style={navStyles.navContainer}>
-      {isSearchScreen ? <NavBar currentPage={screenName} navigation={navigation} /> : <></>}
+      {displayNavBar ? <NavBar currentPage={screenName} navigation={navigation} /> : <></>}
     </View>
   );
 }

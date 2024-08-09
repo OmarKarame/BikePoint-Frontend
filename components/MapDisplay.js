@@ -269,7 +269,12 @@ export default function MapDisplay({ location = null }) {
 
           {/* Start Marker */}
           {startStation && (
-            <Marker coordinate={{ latitude: fromLat, longitude: fromLon }}>
+            <Marker
+              coordinate={{
+                latitude: parseFloat(fromLat),
+                longitude: parseFloat(fromLon),
+              }}
+            >
               <View style={styles.markerContainer}>
                 <View style={styles.banner}>
                   <Text style={styles.bannerText}>Start</Text>
@@ -279,9 +284,13 @@ export default function MapDisplay({ location = null }) {
             </Marker>
           )}
 
-          {/* End Marker */}
           {endStation && (
-            <Marker coordinate={{ latitude: toLat, longitude: toLon }}>
+            <Marker
+              coordinate={{
+                latitude: parseFloat(toLat),
+                longitude: parseFloat(toLon),
+              }}
+            >
               <View style={styles.markerContainer}>
                 <View style={styles.banner}>
                   <Text style={styles.bannerText}>End</Text>

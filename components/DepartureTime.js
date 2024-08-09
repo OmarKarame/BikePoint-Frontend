@@ -28,12 +28,12 @@ export default function DepartureTime() {
   };
 
     const startInterval = () => {
-        if (intervalId === null) {
-            const id = setInterval(() => {
-                setCurrentTime(new Date());
-            }, 60000);
-            setIntervalId(id);
-        }
+      if (intervalId === null) {
+          const id = setInterval(() => {
+              setCurrentTime(new Date());
+          }, 60000);
+          setIntervalId(id);
+      }
     };
 
   const handlePressIn = () => {
@@ -68,16 +68,17 @@ export default function DepartureTime() {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={[styles.container, isPressed ? styles.pressed : {}]}
+      style={styles.container}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       onPress={showPicker}
     >
       <View style={styles.content}>
+        <Text style={styles.text}>Time</Text>
         <View style={styles.mainImage}>
           <Image source={clockIcon} style={styles.image}/>
         </View>
-        <View style={[styles.contentInfo, isNow ? { transform: [{ translateY: -2 }] } : {}]}>
+        <View style={[styles.contentInfo, isNow ? { transform: [{ translateY: -1 }, {translateX: 28}] } : { transform: [{ translateY: -1 }, {translateX: -4}] }]}>
           <DateTimePickerModal
             isVisible={isPickerVisible}
             mode="datetime"
@@ -93,9 +94,9 @@ export default function DepartureTime() {
           </Text>
           <SvgXml
             xml={svgExpandArrow}
-            width="15"
-            height="15"
-            style={isNow ? [{ transform: [{ translateX: -10 }] }] : [{ translateX: -10 }]}
+            width="20"
+            height="20"
+            style={isNow ? [{ transform: [{ translateX: -14 }] }] : [{ translateX: -10 }]}
           />
         </View>
       </View>
@@ -108,40 +109,52 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(195, 222, 231, 0.5)',
-    height: '100%',
+    backgroundColor: 'white',
+    height: 40,
+    borderRadius: 20,
+    maxWidth: '49.5%',
+    borderColor: 'grey',
+    borderWidth: 1,
     borderRadius: 10,
-    maxWidth: '24%',
   },
   content: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     width: '80%',
     height: '100%'
   },
+  text: {
+    marginLeft: -10,
+    marginRight: 5,
+    fontWeight: '700',
+    width: '25%'
+  },
   pressed: {
     backgroundColor: 'rgba(195, 222, 231, 1)',
   },
   image: {
-    height: 50,
-    width: 50,
-    marginTop: 4
+    height: 20,
+    width: 20,
+    marginBottom: 2
   },
   contentInfo: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: -10,
-    width: '70%',
-    marginLeft: 16
+    width: '45%',
+    marginLeft: 16,
+    height: '100%',
+    marginTop: 2,
+    marginRight: 8,
+
   },
   time: {
-    fontSize: 12,
+    fontSize: 16,
     color: 'black',
-    fontWeight: '600',
+    fontWeight: '500',
     textAlign: 'center',
   }
 })

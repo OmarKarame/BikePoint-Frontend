@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     // borderColor: '#EC0000',
     borderColor: 'grey',
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 2,

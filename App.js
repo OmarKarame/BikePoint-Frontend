@@ -9,7 +9,7 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 
 import Home from './screens/Home';
-import Chat from './screens/Chat';
+import Statistics from './screens/Statistics';
 import Map from './screens/Map';
 import Settings from './screens/Settings';
 import Search from './screens/Search';
@@ -25,6 +25,7 @@ if (__DEV__) {
       // default props not directly used in code, but some dependencies still use it even with latest version: expo-cli and babel/helpers,
       'This synthetic event is reused for performance reasons. If you\'re seeing this, you\'re %s `%s` on a released/nullified synthetic event. %s. If you must keep the original synthetic event around, use event.persist()',
         // Reason: Unknown for now, docs are outdated and persist didnt work properly (maybe need to use it differently?)
+        'Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.',
 
     ];
 
@@ -97,7 +98,7 @@ export default function App() {
               <Stack.Screen name="Home" component={Home}/>
               <Stack.Screen name="Map" component={Map} />
               <Stack.Screen name="Settings" component={Settings} />
-              <Stack.Screen name="Chat" component={Chat} />
+              <Stack.Screen name="Statistics" component={Statistics} />
               <Stack.Screen name="Search" component={Search} />
             </Stack.Navigator>
             <NavBarWrapper />

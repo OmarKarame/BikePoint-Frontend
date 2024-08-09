@@ -1,0 +1,13 @@
+const svgRedTakeMeToWorkIcon = `
+<svg width="90" height="90" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="90" height="90" fill="url(#pattern0_676_128)"/>
+<defs>
+<pattern id="pattern0_676_128" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_676_128" transform="scale(0.0111111)"/>
+</pattern>
+<image id="image0_676_128" width="90" height="90" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEGElEQVR4nO2cS4gcRRiAv18Q0SCID8wl+EBB9GDUBDR4ELzk5kUPInhQzEHUq948q+AhxiSC5AFe9aJJEA0eVLwZbyoGDOrqznb9M2s0WUnMtlRmFhbpnu3J1nRVdf8f/Keunq75prreNWAYhmEYhmEYhtFXFuA6J7zrhGUVypTCCSMV9v0C15I7TjgYW2gD4QfJmRKuUuF8bJEN4pzPK7liolskk6rjALnjGxoV3pk0PKkJHqqwtxONoWEYhmEYRrfnMbRL8yE5DEY09/mQjIbXZdbzISa6RXpWdRwgFinPY2hX50NiC9E5BakRW4ia6PiyelGiu5o+GqmJUBOdpjgr0RNMdKIi1Ep0muKyrzpyD1IjthA10fFlWYmW+CKt6pA0gtSILUT7Ljql9E5YrUpbgqjwqwpHHDzr4OER3O4Xn0mNnEVnhYluCRPdEpmIvkDuZCEaXiJ3YnfDdOM4tNF3KOAeB6+rcHLSC/EbhM6p8IXCblIgAZHllFj8A7bU5X0ItznhY98rmfY5Tngv+umtBGSWtYLgldp8w+5ZNmk64YwTTig87fvf7VpOW/TvJVxTlechPLrJ/YMflnC1iZbx614lwst3wukAP+TbJlooC3iiSoSDl4NUS8LFZbizNdl1GYmdvoDrq6474atQ1ZPvqdBn0U5YrrrmeyBOuBSwHThJn0Wr8GPVtQHcFVCyj9/ouehvqq4VsDOw6L/oueifKq/BtpCinfAzPRf9d9U1P7pzQhFQ9AnaIvCrWIaKEdwx72Mh00aevRE9hBer8uuXqpzwT4BnnP8Tbuq9aBUO183UBTq+t6Jwn4kW9lZJ8CV93m/NXIhdRWh9vF+VXwfPBxT9TO9FO+GTKgl+fsIvbYU4HrcMN0YXHSr9rKwTsVQ3WT+E1zYp+aKDJ2mTVEWrD3hkSrqjoRva/ooWPqpNB7s2WsKqKc2rfkcTbZOyaCesFvB4XVr/nyNXUJr3EYOURes4BgPYOuUPXk7NUJq/jXY2PAPRpRP216U/C7eo8EMDyafrfrBW2ESDUrYo+sIQ7q+7p4DHNsqfT0NMchCt4/i87p4CdjQQvYOYpCzajZetPlN4atr2ABN9BUwE/+v7yUtwd5N7mqy8+DTEJLUS7YRTI3hgxnveatAYvkFMUhNdzriDSOGFJivjPo2D54hFaqKbMhkZHps1n35T5LSh/dzISfQIblDY44TvAuT5e4VXz8LNbeQ9C9EO7nXCB5dXRQLld12s+M/2z6CvDGDr5aNt415IaMH/r1L8Mw4twq30iSV40G/dnbfgilgYwXb6wGi80r0UQfJaDPxpArqOCp9GlLxWlRyny4xge2zJa1HAQ3QV12CU12KpfpOu4oSvExL9JV1FhcXYgtfFAl3FhdlXFypW/gM5r4wk50GsZAAAAABJRU5ErkJggg=="/>
+</defs>
+</svg>
+`
+
+export default svgRedTakeMeToWorkIcon

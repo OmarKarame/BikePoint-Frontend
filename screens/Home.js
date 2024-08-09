@@ -1,46 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Keyboard, View, TouchableWithoutFeedback, StatusBar, Text, Dimensions, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import LocationSearchContainer from '../components/LocationSearchContainer';
 import AdditionalContentContainer from '../components/AdditionalContentContainer';
-import bikeSpotLogo from '../assets/images/bikespot-logo.png'
-import * as Font from 'expo-font';
+import bikeSpotLogo from '../assets/images/bikespot-logo.png';
 import GetMeSomewhereButton from '../components/GetMeSomewhereButton';
-import santanderBike from '../assets/images/santander-bike.png';
-import bikeImage from '../assets/images/homepage-bike-image.png';
-import LocationContext from "../components/LocationContext";
+import svgHomeScreenHeaderDesign from '../assets/svgs/svgHomeScreenHeaderDesign';
+import { SvgXml } from 'react-native-svg';
+import bikeImage from '../assets/images/santander-bike-home.png';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 export default function Home() {
   const navigation = useNavigation();
-
-  // const {
-  //   setToLocation,
-  //   setToLat,
-  //   setToLon,
-  //   setFromLat,
-  //   setFromLon,
-  //   toLon
-  // } = useContext(LocationContext);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setToLocation('');
-  //     setToLat(null);
-  //     setToLon(null);
-  //     setFromLat(null);
-  //     setToLat(null);
-  //     console.log("Home page loaded: " + toLon);
-
-  //     // Optional clean-up function
-  //     return () => {
-  //       // Any cleanup actions if needed when the screen goes out of focus
-  //     };
-  //   }, [])
-  // );
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -52,6 +26,12 @@ export default function Home() {
           locations={[0.0, 0.75, 1.0]}
           style={styles.innerShadow}
         />
+        <View style={styles.headerDesign}>
+          <SvgXml
+            xml={svgHomeScreenHeaderDesign}
+            style={styles.headerDesignSVG}
+          />
+        </View>
         <StatusBar
           backgroundColor="white"
           barStyle="dark-content"
@@ -62,9 +42,6 @@ export default function Home() {
               <Text style={styles.headerText}>
                 BikePoint
               </Text>
-            </View>
-            <View style={styles.headerLogoSection}>
-              <Image source={bikeSpotLogo} style={styles.headerLogo} />
             </View>
           </View>
           <View style={styles.mainImage}>
@@ -84,7 +61,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
     width: screenWidth,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   innerShadow: {
     position: 'absolute',
@@ -103,38 +80,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     position: 'absolute',
-    top: screenHeight * 8/100,
+    top: screenHeight * 8 / 100,
+  },
+  headerDesign: {
+    position: 'absolute',
+    zIndex: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 6,
   },
   headerSection: {
-    width: screenWidth * 90/100,
+    width: screenWidth * 90 / 100,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    transform: [{ translateY: - screenWidth *5/100}]
+    transform: [{ translateY: -screenWidth * 5 / 100 }],
   },
-  headerTextSection:{
+  headerTextSection: {
     width: '74%',
     marginBottom: 8,
     borderRadius: 8,
     alignItems: 'flex-start',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   headerText: {
-    color: 'black',
-    fontSize: 30,
+    color: 'white',
+    fontSize: 25,
     fontWeight: '600',
     marginTop: '3%',
     letterSpacing: -1,
-  },
-  headerBlob: {
-    width: 50,
-    height: '92%',
-    backgroundColor: '#ED0000',
-    borderRadius: 20,
-    marginRight: 4
+    marginLeft: 15,
   },
   headerLogoSection: {
     width: '17%',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   headerLogo: {
     height: 70,
@@ -142,16 +122,19 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   mainImage: {
-    height: 350,
-    width: screenWidth * 90/100,
+    height: 280,
+    marginTop: 100,
+    aspectRatio: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
-    transform: [{ translateY: - screenWidth * 4/100}]
+    marginBottom: -5,
+    transform: [{ translateX: -screenWidth * 22 / 100 }],
   },
   mainBikeImage: {
     height: '100%',
     width: '100%',
+    borderRadius: 40,
+    opacity: 1,
   },
   footer: {
     width: screenWidth,
@@ -160,8 +143,8 @@ const styles = StyleSheet.create({
     left: 0,
   },
   bikeImage: {
-    width: screenWidth*1.09,
-    height: screenHeight * 30 /100,
-    opacity: 1
-  }
+    width: screenWidth * 1.09,
+    height: screenHeight * 30 / 100,
+    opacity: 1,
+  },
 });
